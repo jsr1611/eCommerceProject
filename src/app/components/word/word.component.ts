@@ -1,6 +1,7 @@
 import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { catchError, of } from 'rxjs';
+import { Word } from 'src/app/models/word';
 import { DictionaryService } from 'src/app/services/DictionaryService';
 
 @Component({
@@ -8,49 +9,60 @@ import { DictionaryService } from 'src/app/services/DictionaryService';
   templateUrl: './word.component.html',
   styleUrls: ['./word.component.css']
 })
-export class WordComponent implements OnInit, OnChanges{
-  word:any = "";
-  constructor(private dictService: DictionaryService, private route: ActivatedRoute) { }
-  fileExists:boolean = false;
+export class WordComponent implements OnInit {
 
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes['word']);
-  }
-  ngOnInit(): void {
-    this.fileExists = false;
-    let id = Number(this.route.snapshot.paramMap.get('id'));
-    let keyWord = this.route.snapshot.paramMap.get('searchKey');
-    console.log("id: ", id);
-    id!=0 && this.dictService.findWordById(id)
-    .pipe(catchError((error)=>{
-      console.log(error);
-      return of(null);
-    }))
-    .subscribe((data) =>{
-      if(data){
-        this.word = data;
-        this.dictService.fileExists(`/assets/audio/${this.word._id}.m4a`)
-        .subscribe(exists => {
-          this.fileExists = exists;
-        })
-      }
-    })
-    keyWord?.length && this.dictService.getDictionaryLocal()
-    .pipe(catchError(error => {
-      console.log(error);
-      return of(null);
-    }))
-    .subscribe(data =>{
-      data?.forEach(w =>{
-        if(keyWord && (w.word + "").startsWith(keyWord)){
-          this.word = w;
-          this.dictService.fileExists(`assets/audio/${this.word._id}.m4a`)
-          .subscribe(exists => {
-            this.fileExists = exists;
-            return;
+  constructor(
+    private dictService: DictionaryService,
+    private route: ActivatedRoute
+  ) { }
+  fileExists: boolean = false;
+  word: any = "";
+  searchKey: string = "";
+  private localDict: Word[] = [];
+
+  async ngOnInit(): Promise<void> {
+    if (this.localDict.length === 0) {
+      console.log("initializing localDictionary...");
+
+      try {
+        // Ensure the local dictionary is fully loaded before doing anything else
+        const dictionaryData = await this.dictService.getDictionaryLocal();
+
+        dictionaryData.pipe(
+          catchError(error => {
+            console.log("Error loading local dictionary file: ", error);
+            return of(null);
           })
-        }
-      })
-    })
+        )
+          .subscribe((data) => {
+            if (data) {
+              this.localDict = data;
+              console.log("Dict: ", this.localDict);
+            }
+          });
+      } catch (error) {
+        console.error("Error in getting dictionary observable: ", error);
+      }
+    } else {
+      console.log("localDict is already available, dict size: ", this.localDict.length);
+    }
+
+    // Now subscribe to route changes and perform the search
+    this.route.params.subscribe(params => {
+      this.searchKey = params['searchKey'];
+      this.performSearch(this.searchKey);
+    });
+  }
+
+  performSearch(searchKey: string) {
+    console.log("search key:", searchKey, this.localDict.length);
+    // Perform search only if the dictionary is loaded
+    if (this.localDict.length > 0) {
+      let someWord = this.localDict.filter(item => (item.uzbek.startsWith(searchKey) && item.uzbek.length ===searchKey.length) );
+      this.word = someWord.length > 0 ? someWord[0] : null;
+      console.log("word: ", this.word);
+    } else {
+      console.log("Local dictionary not loaded, cannot perform search.");
+    }
   }
 }

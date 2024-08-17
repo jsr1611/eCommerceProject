@@ -1,5 +1,6 @@
 import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { NavBarService } from './navbar.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -7,13 +8,26 @@ import { NavBarService } from './navbar.service';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnChanges{
-  constructor(private navbarService: NavBarService){ }
+  constructor(
+    private navbarService: NavBarService,
+    private router: Router
+  ){ }
 
   ngOnChanges(changes: SimpleChanges): void {
     console.log(changes);
   }
 
   searchKey:string = "";
+
+  search() {
+    console.log("search() called searchKey: ", this.searchKey);
+    
+    if (this.searchKey) {
+      this.router.navigate(['/search', this.searchKey]);
+    }
+  }
+
+
 
   useLocalDB(){
     let btn = document.getElementById("localdb");

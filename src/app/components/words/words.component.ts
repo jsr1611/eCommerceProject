@@ -16,9 +16,9 @@ export class WordsComponent implements OnInit{
   }
   dict:any[] = [];
 
-  refresh(){
-    this.dictService
-    .getDictionaryLocal()
+  async refresh(){
+    (await this.dictService
+      .getDictionaryLocal())
     .pipe(
       catchError((error) => {
       console.log(error);

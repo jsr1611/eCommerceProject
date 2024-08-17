@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, map, of } from 'rxjs';
+import { Word } from '../models/word';
 
 @Injectable({
   providedIn: 'root',
@@ -10,12 +11,14 @@ export class DictionaryService {
   // readonly API_Url_Server = "https://lp-backend-t6jz.onrender.com/api/arabic/dict";
   readonly API_Url_Server = "http://api.jumanazar.uz/dict";
   constructor(private httpClient: HttpClient) {}
+
+  private localDict: Word[] = [];
   getDictionary() {
     return this.httpClient.get<any[]>(this.API_Url_Server);
   }
 
-  getDictionaryLocal(){
-    return this.httpClient.get<any[]>('/assets/data/dict.json');
+  async getDictionaryLocal(){
+    return this.httpClient.get<Word[]>('/assets/data/dict.json');
   }
 
   createDictEntry(word:any){
@@ -26,7 +29,6 @@ export class DictionaryService {
   findWord(params:any){
     return this.httpClient.get<any>(this.API_Url_Server, params);
   }
-
 
   findWordById(id:number){
     return this.httpClient.get<any>(this.API_Url_Server + "/" + id);

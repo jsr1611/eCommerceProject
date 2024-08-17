@@ -33,9 +33,9 @@ export class TestsComponent implements OnInit {
   localDbState: boolean = false;
   private _dbStateSub: Subscription = new Subscription();
 
-  ngOnInit(): void {
-    this.dict = this.dictService
-      .getDictionaryLocal()
+  async ngOnInit(): Promise<void> {
+    this.dict = (await this.dictService
+      .getDictionaryLocal())
       .pipe(
         catchError((error) => {
           console.log(error);
@@ -47,10 +47,10 @@ export class TestsComponent implements OnInit {
         this.generateTest();
       });
     this._dbStateSub = this.navbarService.dbState.subscribe(
-      (newState: boolean) => {
+      async (newState: boolean) => {
         this.localDbState = newState;
         if(newState){
-          this.dict = this.dictService.getDictionaryLocal()
+          this.dict = (await this.dictService.getDictionaryLocal())
           .pipe(
             catchError((error) => {
               console.log(error);
