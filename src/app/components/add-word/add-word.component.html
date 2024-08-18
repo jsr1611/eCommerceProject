@@ -1,4 +1,4 @@
-<h2>Yangi so`z qo`shish:</h2>
+<h2>Yangi so`z qo`shish: <span *ngIf="successMsg.length > 0">{{successMsg}}</span></h2>
 <div class="container">
   <form (ngSubmit)="addWord()" #wordForm="ngForm">
     <div class="form-group">
