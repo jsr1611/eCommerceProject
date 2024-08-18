@@ -3,7 +3,6 @@ import { catchError, of } from 'rxjs';
 import { Category, Word } from 'src/app/models/word';
 import { CategoryMapping } from 'src/app/mappings/category-mapping';
 import { DictionaryService } from 'src/app/services/DictionaryService';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-add-word',
