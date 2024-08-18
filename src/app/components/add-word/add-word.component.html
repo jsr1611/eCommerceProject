@@ -2,7 +2,7 @@
 <div class="form">
   O'qilishi:
   <input
-    [(ngModel)]="word"
+    [(ngModel)]="newWord.pronunciation"
     type="text"
     class="word-meaning"
     placeholder="So'zni o'qilishini kiriting"
@@ -10,7 +10,7 @@
   <br />
   Arabchasi:
   <input
-    [(ngModel)]="arabic"
+    [(ngModel)]="newWord.arabic"
     class="word-meaning"
     type="text"
     placeholder="So'zni arabcha shaklini kiriting"
@@ -18,19 +18,34 @@
   <br />
   Ma`nosi:
   <input
-    [(ngModel)]="uzbek"
+    [(ngModel)]="newWord.uzbek"
     class="word-meaning"
     type="text"
     placeholder="So'zni ma`nosini kiriting"
   />
   <br />
-  Turi:
+  Inglizchasi (ixtiyoriy):
   <input
-    [(ngModel)]="wtype"
-    type="text"
+    [(ngModel)]="newWord.english"
     class="word-meaning"
-    placeholder="So'zni turini kiriting"
+    type="text"
+    placeholder="So'zni ma`nosini kiriting"
   />
+  <br />
+  <div class="form-group">
+    <label for="category">Turi:</label>
+    <select
+      id="category"
+      name="category"
+      [(ngModel)]="newWord.category"
+      class="form-control"
+      required
+    >
+      <option *ngFor="let category of categories" [value]="category">
+        {{ categoryLabels[category] }} <!-- Display Uzbek labels -->
+      </option>
+    </select>
+  </div>
   <br />
   <button (click)="addWord()" class="btn btn-primary">Saqlash</button>
 </div>

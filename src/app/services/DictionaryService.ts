@@ -8,30 +8,30 @@ import { Word } from '../models/word';
 })
 export class DictionaryService {
   // readonly API_Url_Server = "http://127.0.0.1:3000/api/dict";
-  // readonly API_Url_Server = "https://lp-backend-t6jz.onrender.com/api/arabic/dict";
-  readonly API_Url_Server = "http://api.jumanazar.uz/dict";
+  readonly API_Url_Server = "https://arabic-backend-m4al.onrender.com/api/words";
+  // readonly API_Url_Server = "http://api.jumanazar.uz/dict";
   constructor(private httpClient: HttpClient) {}
 
   private localDict: Word[] = [];
   getDictionary() {
-    return this.httpClient.get<any[]>(this.API_Url_Server);
+    return this.httpClient.get<Word[]>(this.API_Url_Server);
   }
 
   async getDictionaryLocal(){
     return this.httpClient.get<Word[]>('/assets/data/dict.json');
   }
 
-  createDictEntry(word:any){
+  createDictEntry(word:Word){
     console.log("Sending...", word);
-    return this.httpClient.post<any>(this.API_Url_Server, word);
+    return this.httpClient.post<Word>(this.API_Url_Server, word);
   }
 
   findWord(params:any){
-    return this.httpClient.get<any>(this.API_Url_Server, params);
+    return this.httpClient.get<Word>(this.API_Url_Server, params);
   }
 
   findWordById(id:number){
-    return this.httpClient.get<any>(this.API_Url_Server + "/" + id);
+    return this.httpClient.get<Word>(this.API_Url_Server + "/" + id);
   }
 
   fileExists(url: string): Observable<boolean>{
