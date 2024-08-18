@@ -26,7 +26,7 @@ export class WordComponent implements OnInit {
 
       try {
         // Ensure the local dictionary is fully loaded before doing anything else
-        const dictionaryData = await this.dictService.getDictionaryLocal();
+        const dictionaryData = await this.dictService.getDictionary();
 
         dictionaryData.pipe(
           catchError(error => {

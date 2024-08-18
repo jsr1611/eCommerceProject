@@ -1,7 +1,7 @@
 <h2>Yangi so`z:</h2>
-<div *ngIf="word.word; else elseBlock">
+<div *ngIf="word.pronunciation; else elseBlock">
   <span class="word-arabic"
-    >{{ word.arabic != "" ? word.arabic : word.word }}</span>
+    >{{ word.arabic != "" ? word.arabic : word.pronunciation }}</span>
   <i class="bi bi-arrow-left-right mx-4"></i><span class="word-arabic"> {{ word.uzbek }}</span>
   <br>
   <audio *ngIf="fileExists" [id]="word._id" controls>
@@ -14,9 +14,9 @@
   <div *ngIf="word.english != ''">
     inglizcha: <span class="word-meaning">{{ word.english }}</span> <br />
   </div>
-  <div *ngIf="word.russian != ''">
+  <!-- <div *ngIf="word.russian != ''">
     ruscha: <span class="word-meaning">{{ word.russian }}</span>
-  </div>
+  </div> -->
 </div>
 <ng-template #elseBlock>
   <p>So'z topilmadi!</p>

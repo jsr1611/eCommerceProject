@@ -1,0 +1,26 @@
+.container {
+    max-width: 600px;
+    margin: auto;
+  }
+  
+  .form {
+    margin: 20px 0;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-control {
+    width: 100%;
+    padding: 10px;
+  }
+  
+  .btn-primary {
+    margin-top: 10px;
+  }
+  
+  .btn-secondary {
+    margin-top: 10px;
+  }
+  
