@@ -6,7 +6,7 @@
 </p>
 <h2 *ngIf="test; else elseBlock">
   <span *ngIf="UZ_AR; else AR_UZ">
-  {{test.arabic}} \ {{test.word}} \
+  {{test.arabic}} \ {{test.pronunciation}} \
 </span>
 <ng-template #AR_UZ>
   {{test.uzbek}}
