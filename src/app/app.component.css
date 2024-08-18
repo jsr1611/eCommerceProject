@@ -1,0 +1,25 @@
+/* Ensure html and body fill the full viewport height */
+html, body {
+    height: 100%;
+    margin: 0;
+  }
+  
+  /* Use flexbox on the body to layout children */
+  body {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Main container should grow to take available space */
+  .container {
+    flex: 1;
+  }
+  
+  /* Footer styles */
+  .footer {
+    background-color: #f8f9fa; /* Optional: for visual separation */
+    text-align: center;
+    padding: 10px;
+    border-top: 1px solid #e1e1e1; /* Optional: for a border effect */
+  }
+  
