@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { catchError, of } from 'rxjs';
+import { Word } from 'src/app/models/word';
 import { DictionaryService } from 'src/app/services/DictionaryService';
 
 @Component({
@@ -14,22 +15,40 @@ export class WordsComponent implements OnInit{
   ngOnInit(): void {
   this.refresh();
   }
-  dict:any[] = [];
+  dict:Word[] = [];
 
   async refresh(){
-    (await this.dictService
-      .getDictionaryLocal())
-    .pipe(
-      catchError((error) => {
-      console.log(error);
-      return of(null);
-    }))
-    .subscribe((data) =>{
-      if(data)
-        this.dict = data;
-      else
-        this.dict = [];
-    })
+    try{
+      (await this.dictService
+        .getDictionary())
+      .pipe(
+        catchError((error) => {
+        console.log(error);
+        return of(null);
+      }))
+      .subscribe((data) =>{
+        if(data)
+          this.dict = data;
+        else
+          this.dict = [];
+      })  
+    }
+    catch(e){
+      (await this.dictService
+        .getDictionaryLocal())
+      .pipe(
+        catchError((error) => {
+        console.log(error);
+        return of(null);
+      }))
+      .subscribe((data) =>{
+        if(data)
+          this.dict = data;
+        else
+          this.dict = [];
+      })
+    }
+    
   }
 
 }

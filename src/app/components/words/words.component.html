@@ -1,8 +1,8 @@
 <h2>Yangi so`zlar:</h2>
 <ng-container *ngFor="let item of dict">
-  <p *ngIf="item.word != ''">
+  <p *ngIf="item.pronunciation != ''">
     <span class="word-arabic"
-      >{{ item.arabic != "" ? item.arabic : item.word }}
+      >{{ item.arabic != "" ? item.arabic : item.pronunciation }}
     </span>
     =>
     <span class="word-meaning">{{ item.uzbek }}</span>
