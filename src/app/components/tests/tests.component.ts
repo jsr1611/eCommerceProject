@@ -3,6 +3,7 @@ import { Router } from "@angular/router";
 import { Subscription, catchError, of } from "rxjs";
 import { DictionaryService } from "src/app/services/DictionaryService";
 import { NavBarService } from "../navbar/navbar.service";
+import { Word } from "src/app/models/word";
 
 @Component({
   selector: "app-tests",
@@ -15,7 +16,7 @@ export class TestsComponent implements OnInit {
     private router: Router,
     private navbarService: NavBarService
   ) {}
-  dict: any = [];
+  dict: Word[] = [];
   testNumber: number = 0;
   test: any = "";
   answers: any = [];
@@ -34,23 +35,41 @@ export class TestsComponent implements OnInit {
   private _dbStateSub: Subscription = new Subscription();
 
   async ngOnInit(): Promise<void> {
-    this.dict = (await this.dictService
-      .getDictionaryLocal())
-      .pipe(
-        catchError((error) => {
-          console.log(error);
-          return of(null);
-        })
-      )
-      .subscribe((data) => {
-        this.dict = data;
-        this.generateTest();
-      });
+    try{
+      (await this.dictService
+        .getDictionary())
+        .pipe(
+          catchError((error) => {
+            console.log(error);
+            return of(null);
+          })
+        )
+        .subscribe((data) => {
+          this.dict = data ?? [];
+          this.generateTest();
+        });
+    }catch(e){
+      console.log("Couldn't fetch data from cloud DB, falling back to local db data");
+      
+      (await this.dictService
+        .getDictionaryLocal())
+        .pipe(
+          catchError((error) => {
+            console.log(error);
+            return of(null);
+          })
+        )
+        .subscribe((data) => {
+          this.dict = data ?? [];
+          this.generateTest();
+        });
+    }
+    
     this._dbStateSub = this.navbarService.dbState.subscribe(
       async (newState: boolean) => {
         this.localDbState = newState;
         if(newState){
-          this.dict = (await this.dictService.getDictionaryLocal())
+          (await this.dictService.getDictionaryLocal())
           .pipe(
             catchError((error) => {
               console.log(error);
@@ -58,7 +77,7 @@ export class TestsComponent implements OnInit {
             })
           )
           .subscribe((data) => {
-            this.dict = data;
+            this.dict = data ?? [];
             this.generateTest();
           });
         }
