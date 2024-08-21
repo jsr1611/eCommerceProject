@@ -14,18 +14,15 @@ export class AppComponent implements OnInit {
   UNIQUE_VISITORS: string = "uniqueVisitors";
   CURRENT_DATE: string = "currentDate";
 
+
   constructor(
     private userService: UserService
   ) { }
 
   ngOnInit(): void {
-    let localCount = localStorage.getItem(this.UNIQUE_VISITORS);
-    let currentDate = localStorage.getItem(this.CURRENT_DATE);
-    if (localCount && currentDate) {
-      if (this.formatDate(new Date()) == currentDate && Number(localCount) > this.dailyVisitCount) {
-        this.dailyVisitCount = Number(localCount);
-      }
-    }
+    let storedCount = localStorage.getItem(this.UNIQUE_VISITORS);
+    let storedDate = localStorage.getItem(this.CURRENT_DATE);
+    
     this.userService.recordVisit().subscribe({
       next: () => console.log('Tashrif muvaffaqiyatli qayd etildi. Tashrifingiz uchun rahmat!'),
       error: error => console.error('Tashrif qayd etishda xatolik bo`ldi', error)
@@ -35,18 +32,24 @@ export class AppComponent implements OnInit {
       this.userService.getVisitsCount().subscribe({
         next: (visitData: Visit) => {
           this.dailyVisitData = visitData;
-          if (visitData.uniqueVisitors > this.dailyVisitCount) {
+          if (storedDate != this.dateFormatter(visitData.date)){
             this.dailyVisitCount = visitData.uniqueVisitors;
+            localStorage.setItem(this.UNIQUE_VISITORS, `${this.dailyVisitCount}`);
+            localStorage.setItem(this.CURRENT_DATE, `${this.dateFormatter(visitData.date)}`);
+          } else {
+            if(this.dailyVisitCount < visitData.uniqueVisitors){
+              this.dailyVisitCount = visitData.uniqueVisitors;
+              localStorage.setItem(this.UNIQUE_VISITORS, `${this.dailyVisitCount}`);
+            }
           }
-          localStorage.setItem(this.UNIQUE_VISITORS, `${this.dailyVisitCount}`);
-          localStorage.setItem(this.CURRENT_DATE, `${this.formatDate(new Date())}`);
         },
         error: (error: any) => console.error('Tashriflar ma`lumotini yuklashda xatolik bo`ldi', error)
       });
     }, 1000);
   }
 
-  formatDate = (date: Date): string => {
+  dateFormatter = (date: Date): string => {
+    date = new Date(date);
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
