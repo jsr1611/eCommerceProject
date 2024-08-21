@@ -38,9 +38,9 @@ import { UserService } from './services/UserService';
       { path: 'home', component: HomeComponent },
       { path: 'add-word', component: AddWordComponent },
       { path: 'words', component: WordsComponent },
-      { path: 'words/:id', component: WordComponent },
+      { path: 'words/:searchKey', component: WordComponent },
       { path: 'tests', component: TestsComponent },
-      {path: 'search/:searchKey', component: WordComponent},
+      { path: 'search/:searchKey', component: WordComponent },
       //404 Not Found
       { path: '**', component: NotFoundComponent },
     ]),
@@ -48,4 +48,4 @@ import { UserService } from './services/UserService';
   providers: [DictionaryService, NavBarService, UserService],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

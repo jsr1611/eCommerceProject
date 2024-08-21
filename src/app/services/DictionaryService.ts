@@ -21,6 +21,10 @@ export class DictionaryService {
     return this.httpClient.get<Word[]>('/assets/data/dict.json');
   }
 
+  findWordByUzbek(uzbek: string){
+    return this.httpClient.get<Word>(this.API_Url_Server + '/' + uzbek);
+  }
+
   createDictEntry(word:Word){
     console.log("Sending...", word);
     return this.httpClient.post<Word>(this.API_Url_Server, word);
