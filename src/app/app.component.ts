@@ -23,6 +23,14 @@ export class AppComponent implements OnInit {
     let storedCount = localStorage.getItem(this.UNIQUE_VISITORS);
     let storedDate = localStorage.getItem(this.CURRENT_DATE);
     
+    const now = new Date();
+    const utcDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+    if(storedDate && storedDate == this.dateFormatter(utcDate)){
+      this.dailyVisitCount = Number(storedCount);
+    }else{
+      localStorage.removeItem(this.UNIQUE_VISITORS);
+    }
+
     this.userService.recordVisit().subscribe({
       next: () => console.log('Tashrif muvaffaqiyatli qayd etildi. Tashrifingiz uchun rahmat!'),
       error: error => console.error('Tashrif qayd etishda xatolik bo`ldi', error)
