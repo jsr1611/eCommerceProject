@@ -14,7 +14,6 @@ export class WordComponent implements OnInit {
   fileExists: boolean = false;
   word!: Word | null;
   searchKey: string = "";
-  private localDict: Word[] = [];
   private routeParamsSub: Subscription | undefined;
 
   constructor(
@@ -30,7 +29,6 @@ export class WordComponent implements OnInit {
   }
 
   private performSearch(searchKey: string): void {
-    console.log("search key:", searchKey, this.localDict.length);
     this.dictService.findWordByUzbek(searchKey)
       .pipe(
         catchError((error) => {
@@ -41,8 +39,6 @@ export class WordComponent implements OnInit {
       )
       .subscribe((data) => {
         this.word = data;
-        console.log(data);
-        
       });
   }
 
