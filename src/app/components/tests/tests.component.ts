@@ -141,7 +141,6 @@ export class TestsComponent implements OnInit {
       }
     }
     this.totalTestNumbers.push(this.testNumber);
-    console.log("test number generated: ", this.testNumber);
     this.test = this.dict[this.testNumber];
 
     this.tmpAnswerNumbers = [];
