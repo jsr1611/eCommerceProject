@@ -16,7 +16,7 @@ export class UserService {
     }
 
     startWarmup() {
-        const interval = 15 * 60 * 1000; // 15 minutes in milliseconds
+        const interval = 5 * 60 * 1000; // 5 minutes in milliseconds
         console.log("warm up call method initialized...");
         setInterval(() => {
             console.log("warm up call to backend...");
