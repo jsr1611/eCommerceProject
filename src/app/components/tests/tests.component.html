@@ -1,41 +1,57 @@
-<p class="border">
-    Testlar soni: {{dict.length}} | Natija: {{userCorrectTimes}} ta to`g`ri
-    <!-- <i class="bi bi-check"></i>--> 
-      | {{userFalseTimes}} ta xato 
-      <!-- <i class="bi bi-x"></i>  -->
-      | Test raqami: {{totalTestNumbers.length}}  
+<p class="test-info border rounded p-3 mb-4">
+  Testlar soni: {{dict.length}} | Natija: {{userCorrectTimes}} ta to'g'ri 
+  | {{userFalseTimes}} ta xato 
+  | Test raqami: {{totalTestNumbers.length}}  
+  | Eng yaxshi natijangiz: {{bestResult}}  
 </p>
-<p>
-    Bu so`zning ma`nosi nima?
+
+<p class="question-intro mb-4">
+  Bu so'zning ma'nosi nima?
 </p>
-<h2 *ngIf="test; else elseBlock">
-  <span *ngIf="UZ_AR; else AR_UZ">
-  {{test.arabic}} \ {{test.pronunciation}} \
-</span>
+
+<h2 *ngIf="test; else elseBlock" class="test-word">
+<p *ngIf="UZ_AR; else AR_UZ">
+  <span  class="word-arabic">{{test.arabic}}</span> \ {{test.pronunciation}} \
+</p>
 <ng-template #AR_UZ>
   {{test.uzbek}}
 </ng-template>
-
 </h2>
-<ng-template #elseBlock>
-    <h3>Server bilan aloqa yo'q. Iltimos, biroz sabr qiling yoki birozdan keyin yana qayta kirib ko'ring. Rahmat</h3>
-</ng-template><br>
-<p>Quyidagi javoblardan birini tanlang:</p>
-<span *ngIf="UZ_AR; else AR_UZ">
-<button *ngFor="let ans of answers; index as i;" id="ans{{i}}" class="ans-btn btn btn-light" (click)="submitAnswer(i)"><i class="bi"></i>
-  {{ans.uzbek}}
-</button>
-</span>
-<ng-template #AR_UZ>
-  <button *ngFor="let ans of answers; index as i;" id="ans{{i}}" class="ans-btn btn btn-light" (click)="submitAnswer(i)"><i class="bi"></i>
-    {{ans.arabic}} \{{ans.pronunciation}}\
-  </button>
 
+<ng-template #elseBlock>
+  <h3 class="no-connection">
+      Server bilan aloqa yo'q. Iltimos, biroz sabr qiling yoki birozdan keyin yana qayta kirib ko'ring. Rahmat
+  </h3>
 </ng-template>
 
+<p class="answer-prompt mb-3">Quyidagi javoblardan birini tanlang:</p>
 
-<br>
-<button (click)="generateTest()" class="btn btn-primary" title="Keyingi testni yuklash">Keyingi</button>
-<br>
-<button (click)="changeUzbArab()" class="btn btn-info" title="Tilni almashtirish">Arab <i class="bi bi-arrow-left-right"></i> O`zbek</button>
+<span *ngIf="UZ_AR; else AR_UZ">
+<button *ngFor="let ans of answers; index as i;" 
+        id="ans{{i}}" 
+        class="ans-btn btn btn-light mb-2"
+        (click)="submitAnswer(i)">
+  <i class="bi"></i> {{ans.uzbek}}
+</button>
+</span>
 
+<ng-template #AR_UZ>
+<button *ngFor="let ans of answers; index as i;" 
+        id="ans{{i}}" 
+        class="ans-btn btn btn-light mb-2"
+        (click)="submitAnswer(i)">
+  <i class="bi"></i> <span class="word-arabic">{{ans.arabic}}</span> \{{ans.pronunciation}}\
+</button>
+</ng-template>
+
+<div class="button-group mt-4">
+<button (click)="generateTest()" class="btn btn-primary" title="Keyingi testni yuklash">
+  Keyingi <i class="bi bi-arrow-right-square"></i>
+</button>
+<button (click)="changeUzbArab()" class="btn btn-info" title="Tilni almashtirish">
+  Arab <i class="bi bi-arrow-left-right"></i> O'zbek
+</button>
+<button (click)="stopTest()" class="btn btn-danger" title="Testni shu yerda yakunlaysizmi?">
+  Testni yakunlash <i class="bi bi-stop-circle"></i>
+</button>
+</div>

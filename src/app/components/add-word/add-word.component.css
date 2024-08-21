@@ -1,26 +1,96 @@
+/* Header Styling */
+h2 {
+  font-family: 'Amiri', serif;
+  font-size: 1.75em;
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+h2 span {
+  display: block;
+  color: #27ae60; /* Success message color */
+  font-weight: bold;
+}
+
+/* Container Styling */
 .container {
-    max-width: 600px;
-    margin: auto;
-  }
-  
-  .form {
-    margin: 20px 0;
-  }
-  
-  .form-group {
-    margin-bottom: 15px;
-  }
-  
-  .form-control {
-    width: 100%;
-    padding: 10px;
-  }
-  
-  .btn-primary {
-    margin-top: 10px;
-  }
-  
-  .btn-secondary {
-    margin-top: 10px;
-  }
-  
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Group Styling */
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  font-family: 'Amiri', serif;
+  font-size: 1.1em;
+  color: #34495e;
+  margin-bottom: 5px;
+}
+
+.form-group .form-control {
+  width: 100%;
+  padding: 10px;
+  /* font-size: 1em; */
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  font-family: 'Amiri', serif;
+}
+
+/* Specific Styles for Arabic Input */
+.word-arabic {
+  direction: rtl; /* Right-to-left text direction for Arabic */
+  text-align: right; /* Align text to the right */
+  font-size: 2.5rem;
+}
+
+/* Button Styling */
+.btn {
+  display: block;
+  width: 100%;
+  font-family: 'Amiri', serif;
+  font-size: 1.1em;
+  padding: 10px;
+  border-radius: 4px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+  margin-top: 10px; /* Space above buttons */
+}
+
+.btn-primary {
+  background-color: #2980b9;
+  border-color: #2980b9;
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background-color: #1a5276;
+  border-color: #1a5276;
+}
+
+.btn-secondary {
+  background-color: #95a5a6;
+  border-color: #95a5a6;
+  color: #fff;
+}
+
+.btn-secondary:hover {
+  background-color: #7f8c8d;
+  border-color: #7f8c8d;
+}
+
+hr {
+  margin: 20px 0;
+  border: 0;
+  border-top: 1px solid #ddd;
+}

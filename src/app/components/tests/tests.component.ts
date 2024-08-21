@@ -15,7 +15,7 @@ export class TestsComponent implements OnInit {
     private dictService: DictionaryService,
     private router: Router,
     private navbarService: NavBarService
-  ) {}
+  ) { }
   dict: Word[] = [];
   testNumber: number = 0;
   test: any = "";
@@ -27,6 +27,7 @@ export class TestsComponent implements OnInit {
   userAnsers: boolean[] = [];
   userCorrectTimes: number = 0;
   userFalseTimes: number = 0;
+  bestResult: number = 0;
 
   UZ_AR: boolean = false;
 
@@ -35,7 +36,12 @@ export class TestsComponent implements OnInit {
   private _dbStateSub: Subscription = new Subscription();
 
   async ngOnInit(): Promise<void> {
-    try{
+
+    let previousBestResult = localStorage.getItem("bestResult");
+    if (previousBestResult && Number(previousBestResult) > this.bestResult) {
+      this.bestResult = Number(previousBestResult);
+    }
+    try {
       (await this.dictService
         .getDictionary())
         .pipe(
@@ -48,9 +54,9 @@ export class TestsComponent implements OnInit {
           this.dict = data ?? [];
           this.generateTest();
         });
-    }catch(e){
+    } catch (e) {
       console.log("Couldn't fetch data from cloud DB, falling back to local db data");
-      
+
       (await this.dictService
         .getDictionaryLocal())
         .pipe(
@@ -64,34 +70,55 @@ export class TestsComponent implements OnInit {
           this.generateTest();
         });
     }
-    
+
     this._dbStateSub = this.navbarService.dbState.subscribe(
       async (newState: boolean) => {
         this.localDbState = newState;
-        if(newState){
+        if (newState) {
           (await this.dictService.getDictionaryLocal())
-          .pipe(
-            catchError((error) => {
-              console.log(error);
-              return of(null);
-            })
-          )
-          .subscribe((data) => {
-            this.dict = data ?? [];
-            this.generateTest();
-          });
+            .pipe(
+              catchError((error) => {
+                console.log(error);
+                return of(null);
+              })
+            )
+            .subscribe((data) => {
+              this.dict = data ?? [];
+              this.generateTest();
+            });
         }
       }
     );
   }
 
+  stopTest() {
+    this.announceResults();
+  }
 
-  changeUzbArab(){
+  changeUzbArab() {
     this.UZ_AR = !this.UZ_AR;
   }
 
   generateRandomNumber(max: number): number {
     return Math.floor(Math.random() * max);
+  }
+
+  announceResults() {
+    if (this.bestResult < this.userCorrectTimes) {
+      this.bestResult = this.userCorrectTimes;
+      localStorage.setItem('bestResult', this.bestResult.toString());
+    }
+    alert(
+      "Siz " +
+      this.totalTestNumbers.length +
+      " ta testdan " +
+      this.userCorrectTimes +
+      " tasini to'g'ri yechdingiz. Yana urinib ko'ring!"
+    );
+    this.totalTestNumbers = [];
+    this.userAnsers = [];
+    this.userCorrectTimes = 0;
+    this.userFalseTimes = 0;
   }
 
   generateTest() {
@@ -106,17 +133,7 @@ export class TestsComponent implements OnInit {
     this.testNumber = this.generateRandomNumber(this.dict.length);
     if (this.totalTestNumbers.length > 0) {
       if (this.totalTestNumbers.length === this.dict.length) {
-        alert(
-          "Siz " +
-            this.totalTestNumbers.length +
-            " ta testdan " +
-            this.userCorrectTimes +
-            " tasini to'g'ri yechdingiz. Yana urinib ko'ring!"
-        );
-        this.totalTestNumbers = [];
-        this.userAnsers = [];
-        this.userCorrectTimes = 0;
-        this.userFalseTimes = 0;
+        this.announceResults();
       }
       while (this.totalTestNumbers.includes(this.testNumber)) {
         this.testNumber = this.generateRandomNumber(this.dict.length);

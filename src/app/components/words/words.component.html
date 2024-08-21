@@ -1,13 +1,41 @@
-<h2>Yangi so`zlar:</h2>
-<ng-container *ngFor="let item of dict">
-  <p *ngIf="item.pronunciation != ''">
-    <span class="word-arabic"
-      >{{ item.arabic != "" ? item.arabic : item.pronunciation }}
-    </span>
-    =>
-    <span class="word-meaning">{{ item.uzbek }}</span>
-  </p>
-</ng-container>
-<hr />
-<a href="/add-word" class="btn btn-primary">Yangi so'z qo'shish</a>
-<a href="/" class="btn btn-primary">Orqaga qaytish</a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yangi So'zlar</title>
+</head>
+<body>
+    <div class="container">
+        <h2 class="text-center mt-4 mb-4">Yangi so'zlar:</h2>
+
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered text-center">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Arabcha</th>
+                        <th scope="col">Talaffuz</th>
+                        <th scope="col">O'zbekcha</th>
+                        <th scope="col">Inglizcha</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of dict">
+                        <td class="word-arabic"> {{ item.arabic }}</td>
+                        <td>{{ item.pronunciation }}</td>
+                        <td>{{ item.uzbek }}</td>
+                        <td>{{ item.english }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <hr />
+
+        <div class="text-center mt-4">
+            <a href="/add-word" class="btn btn-success btn-lg mx-2">Yangi so'z qo'shish</a>
+            <a href="/" class="btn btn-secondary btn-lg mx-2">Orqaga qaytish</a>
+        </div>
+    </div>
+</body>
+</html>
