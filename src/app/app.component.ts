@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import { UserService } from './services/UserService';
 import { Visit } from './models/visit';
 
@@ -12,7 +12,10 @@ export class AppComponent implements OnInit{
   dailyVisitData!: Visit;
   dailyVisitCount: number = 0;
   
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private cdRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     let localCount = localStorage.getItem("uniqueVisitors");
@@ -29,6 +32,7 @@ export class AppComponent implements OnInit{
         this.dailyVisitData = visitData;
         if(visitData.uniqueVisitors > this.dailyVisitCount){
           this.dailyVisitCount = visitData.uniqueVisitors;
+          this.cdRef.detectChanges();
         }
         localStorage.setItem("uniqueVisitors", `${this.dailyVisitCount}`)
       },
