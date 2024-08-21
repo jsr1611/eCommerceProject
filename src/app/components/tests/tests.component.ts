@@ -93,6 +93,7 @@ export class TestsComponent implements OnInit {
 
   stopTest() {
     this.announceResults();
+    this.generateTest();
   }
 
   changeUzbArab() {
