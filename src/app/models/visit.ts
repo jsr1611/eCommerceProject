@@ -15,5 +15,9 @@ export interface Device{
         region: string,
         city: string
     },
+    device?:{
+        type: string,
+        browser: string,
+    }
     timestamp: Date,
 }
