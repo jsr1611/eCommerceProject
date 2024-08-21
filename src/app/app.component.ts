@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from './services/UserService';
 import { Visit } from './models/visit';
-import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-root',
