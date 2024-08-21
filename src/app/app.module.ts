@@ -15,6 +15,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { NavBarService } from './components/navbar/navbar.service';
 import { WordComponent } from './components/word/word.component';
+import { UserService } from './services/UserService';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,7 @@ import { WordComponent } from './components/word/word.component';
       { path: '**', component: NotFoundComponent },
     ]),
   ],
-  providers: [DictionaryService, NavBarService],
+  providers: [DictionaryService, NavBarService, UserService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
