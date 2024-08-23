@@ -32,7 +32,9 @@ export class AddWordComponent {
       console.log('Please fill out all required fields for a new word');
       return;
     }
-
+    this.newWord.pronunciation = this.newWord.pronunciation.toLowerCase();
+    this.newWord.uzbek = this.newWord.uzbek.toLowerCase();
+    this.newWord.english = this.newWord.english?.toLowerCase();
     this.dictionaryService.createDictEntry(this.newWord).pipe(
       catchError((error) => {
         console.error('Error creating word entry:', error.error);

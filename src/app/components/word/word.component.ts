@@ -23,7 +23,7 @@ export class WordComponent implements OnInit {
 
   ngOnInit(): void {
     this.routeParamsSub = this.route.params.subscribe(params => {
-      this.searchKey = params['searchKey'];
+      this.searchKey = params['searchKey'].toLowerCase();
       this.performSearch(this.searchKey);
     });
   }
