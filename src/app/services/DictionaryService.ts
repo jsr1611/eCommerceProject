@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, map, of } from 'rxjs';
 import { Word } from '../models/word';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DictionaryService {
   // readonly API_Url_Server = "http://127.0.0.1:3000/api/dict";
-  readonly API_Url_Server = "https://arabic-backend-m4al.onrender.com/api/words";
+  readonly API_Url_Server =  environment.baseUrl +  "/api/words";
   // readonly API_Url_Server = "http://api.jumanazar.uz/dict";
   constructor(private httpClient: HttpClient) {}
 
