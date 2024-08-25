@@ -1,0 +1,11 @@
+<div class="profile-container">
+    <h2>User Profile</h2>
+    <div class="profile-details">
+      <p><strong>Name:</strong> {{ user.firstname + " " + user.lastname }}</p>
+      <p><strong>Email:</strong> {{ user.email }}</p>
+      <p><strong>Username: </strong> {{ user.username }}</p>
+      <p><strong>Activated: </strong> {{ user.is_activated ? "Yes" : "No" }}</p>
+      <p *ngIf="user.is_superuser"><strong>Superuser: </strong>Yes</p>
+    </div>
+  </div>
+  

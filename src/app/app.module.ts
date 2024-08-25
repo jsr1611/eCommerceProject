@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { DictionaryService } from './services/DictionaryService';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { WordsComponent } from './components/words/words.component';
 import { RouterModule } from '@angular/router';
@@ -16,6 +16,13 @@ import { FooterComponent } from './components/footer/footer.component';
 import { NavBarService } from './components/navbar/navbar.service';
 import { WordComponent } from './components/word/word.component';
 import { UserService } from './services/UserService';
+import { LoginComponent } from './components/login/login.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { authGuard } from './config/AuthGuard';
+import { AuthInterceptor } from './config/AuthInterceptor';
+import { SignupComponent } from './components/signup/signup.component';
+import { UserPageComponent } from './components/user-page/user-page.component';
+import { AuthService } from './services/AuthService';
 
 @NgModule({
   declarations: [
@@ -28,6 +35,10 @@ import { UserService } from './services/UserService';
     NavbarComponent,
     FooterComponent,
     WordComponent,
+    LoginComponent,
+    SignupComponent,
+    ResetPasswordComponent,
+    UserPageComponent,
   ],
   imports: [
     BrowserModule,
@@ -35,6 +46,10 @@ import { UserService } from './services/UserService';
     FormsModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent },
+      { path: 'login', component: LoginComponent },
+      { path: 'signup', component: SignupComponent },
+      { path: 'reset-password', component: ResetPasswordComponent },
+      { path: 'profile', component: UserPageComponent, canActivate: [authGuard] },
       { path: 'home', component: HomeComponent },
       { path: 'add-word', component: AddWordComponent },
       { path: 'words', component: WordsComponent },
@@ -45,7 +60,7 @@ import { UserService } from './services/UserService';
       { path: '**', component: NotFoundComponent },
     ]),
   ],
-  providers: [DictionaryService, NavBarService, UserService],
+  providers: [DictionaryService, NavBarService, UserService, AuthService, { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

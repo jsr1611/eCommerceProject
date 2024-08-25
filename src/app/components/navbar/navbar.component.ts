@@ -1,6 +1,7 @@
 import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { NavBarService } from './navbar.service';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/services/AuthService';
 
 @Component({
   selector: 'app-navbar',
@@ -10,7 +11,8 @@ import { Router } from '@angular/router';
 export class NavbarComponent implements OnChanges{
   constructor(
     private navbarService: NavBarService,
-    private router: Router
+    private router: Router,
+    public authService: AuthService,
   ){ }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -18,6 +20,12 @@ export class NavbarComponent implements OnChanges{
   }
 
   searchKey:string = "";
+
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
 
   search() {
     console.log("search() called searchKey: ", this.searchKey);
@@ -27,7 +35,19 @@ export class NavbarComponent implements OnChanges{
     }
   }
 
-
+  changeThem(){
+    let btnChangeTheme = document.getElementById("theme-changer");
+    let iTag = btnChangeTheme?.querySelector('i');
+    if(iTag){
+      if(iTag.classList.contains('bi-sun-fill')){
+        iTag.className = '';
+        iTag.classList.add('bi', 'bi-moon-stars');
+      }else{
+        iTag.className = '';
+        iTag.classList.add('bi', 'bi-sun-fill');
+      }
+    }
+  }
 
   useLocalDB(){
     let btn = document.getElementById("localdb");
