@@ -9,6 +9,6 @@ export interface User {
     lastname?: string;
     is_activated?: boolean;
     is_superuser?: boolean;
-    image?: [];
+    profilePicture?: ArrayBuffer;
   }  
 

@@ -1,7 +1,7 @@
 // word.model.ts
 
 export interface Word {
-    _id?: string; // MongoDB ObjectId as a string
+    _id: string; 
     arabic: string;
     pronunciation: string,
     uzbek: string;

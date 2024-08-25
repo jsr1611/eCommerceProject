@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { catchError, of } from 'rxjs';
-import { Word } from 'src/app/models/word';
+import { Category, Word } from 'src/app/models/word';
 import { DictionaryService } from 'src/app/services/DictionaryService';
 
 @Component({
@@ -9,13 +9,32 @@ import { DictionaryService } from 'src/app/services/DictionaryService';
   styleUrls: ['./words.component.css']
 })
 export class WordsComponent implements OnInit{
-
+  dict:Word[] = [];
+  token: string | null = null;
+  
   constructor(private dictService: DictionaryService) { }
 
   ngOnInit(): void {
   this.refresh();
+  this.token = localStorage.getItem("token");
   }
-  dict:Word[] = [];
+
+
+  updateWord(index: number, id: string, category: Category){
+    console.log("index of the word: ", index, id);
+    const updatedWord: Word = {
+      _id: '',
+      arabic: (document.getElementById(index+"_arabic") as HTMLInputElement).value,
+      pronunciation: (document.getElementById(index+"_pronunciation") as HTMLInputElement).value,
+      uzbek: (document.getElementById(index+"_uzbek") as HTMLInputElement).value,
+      english: (document.getElementById(index+"_english") as HTMLInputElement).value,
+      category: category,
+      __v: 0
+    };
+    
+    console.log("word to update: ", updatedWord);
+    
+  }
 
   async refresh(){
     try{

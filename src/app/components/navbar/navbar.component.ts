@@ -16,7 +16,6 @@ export class NavbarComponent implements OnChanges{
   ){ }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes);
   }
 
   searchKey:string = "";

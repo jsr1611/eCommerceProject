@@ -12,6 +12,10 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
+  uploadPicture(fromData: FormData) {
+    return this.http.post(this.baseUrl + '/profile/upload-picture', fromData);
+  }
+
   login(username: string, password: string): Observable<any> {
     return this.http.post(`${this.baseUrl}/signin`, { username, password });
   }
@@ -37,14 +41,22 @@ export class AuthService {
 
   // Optionally, add a method to store and retrieve the JWT token
   setToken(token: string): void {
+    console.log("Setting token to local storage...");
     localStorage.setItem('token', token);
   }
 
   getToken(): string | null {
+    console.log("Getting token from local storage..");
+    
     return localStorage.getItem('token');
   }
 
   logout(): void {
-    localStorage.removeItem('token');
+    try{
+        localStorage.removeItem('token');
+        console.log("logged out successfully");
+    }catch(err){
+        console.error("Error logging out: ", err);
+    }
   }
 }

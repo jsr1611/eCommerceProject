@@ -11,6 +11,7 @@ import { DictionaryService } from 'src/app/services/DictionaryService';
 })
 export class AddWordComponent {
   public newWord: Word = {
+    _id: '',
     arabic: '',
     pronunciation: '',
     uzbek: '',
@@ -62,6 +63,7 @@ export class AddWordComponent {
 
   private resetForm(): void {
     this.newWord = {
+      _id: '',
       arabic: '',
       pronunciation: '',
       uzbek: '',

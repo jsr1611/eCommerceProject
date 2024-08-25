@@ -18,16 +18,16 @@ export class AppComponent implements OnInit {
   constructor(
     private userService: UserService
   ) { }
-
+  
   ngOnInit(): void {
     let storedCount = localStorage.getItem(this.UNIQUE_VISITORS);
     let storedDate = localStorage.getItem(this.CURRENT_DATE);
-    
+
     const now = new Date();
     const utcDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
-    if(storedDate && storedDate == this.dateFormatter(utcDate)){
+    if (storedDate && storedDate == this.dateFormatter(utcDate)) {
       this.dailyVisitCount = Number(storedCount);
-    }else{
+    } else {
       localStorage.removeItem(this.UNIQUE_VISITORS);
     }
 
@@ -40,12 +40,12 @@ export class AppComponent implements OnInit {
       this.userService.getVisitsCount().subscribe({
         next: (visitData: Visit) => {
           this.dailyVisitData = visitData;
-          if (storedDate != this.dateFormatter(visitData.date)){
+          if (storedDate != this.dateFormatter(visitData.date)) {
             this.dailyVisitCount = visitData.uniqueVisitors;
             localStorage.setItem(this.UNIQUE_VISITORS, `${this.dailyVisitCount}`);
             localStorage.setItem(this.CURRENT_DATE, `${this.dateFormatter(visitData.date)}`);
           } else {
-            if(this.dailyVisitCount < visitData.uniqueVisitors){
+            if (this.dailyVisitCount < visitData.uniqueVisitors) {
               this.dailyVisitCount = visitData.uniqueVisitors;
               localStorage.setItem(this.UNIQUE_VISITORS, `${this.dailyVisitCount}`);
             }

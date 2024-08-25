@@ -23,27 +23,29 @@
         <button class="btn btn-outline-success" type="submit" (click)="search()">Qidiruv</button>
         <!-- TODO implement black/white theme changer -->
         <!-- <button id="theme-changer" class="btn btn-light" (click)="changeThem()"><i class="bi bi-sun-fill"></i></button> -->
+        <ul class="navbar-nav ms-auto">
+          <li *ngIf="!authService.getToken()" class="nav-item">
+            <a class="nav-link" routerLink="/login">Login</a>
+          </li>
+          <li *ngIf="!authService.getToken()" class="nav-item">
+            <a class="nav-link" routerLink="/signup">Sign Up</a>
+          </li>
+          <li *ngIf="authService.getToken()" class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              <img src="assets/user-icon.png" alt="User Icon" class="user-icon">
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="userDropdown">
+              <li><a class="dropdown-item" routerLink="/profile">Profile</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item" (click)="logout()">Logout</a></li>
+            </ul>
+          </li>
+        </ul>
 
-        <div class="collapse navbar-collapse justify-content-end">
-          <ul class="navbar-nav">
-            <li *ngIf="!authService.getToken()" class="nav-item">
-              <a class="nav-link" routerLink="/login">Login</a>
-            </li>
-            <li *ngIf="!authService.getToken()" class="nav-item">
-              <a class="nav-link" routerLink="/signup">Sign Up</a>
-            </li>
-            <li *ngIf="authService.getToken()" class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown">
-                <img src="assets/user-icon.png" alt="User Icon" class="user-icon"> Profile
-              </a>
-              <div class="dropdown-menu dropdown-menu-right">
-                <a class="dropdown-item" routerLink="/profile">Profile</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" (click)="logout()">Logout</a>
-              </div>
-            </li>
-          </ul>
-        </div>
+
       </div>
     </div>
   </div>

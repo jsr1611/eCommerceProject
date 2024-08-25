@@ -1,11 +1,18 @@
 <div class="profile-container">
-    <h2>User Profile</h2>
-    <div class="profile-details">
-      <p><strong>Name:</strong> {{ user.firstname + " " + user.lastname }}</p>
-      <p><strong>Email:</strong> {{ user.email }}</p>
-      <p><strong>Username: </strong> {{ user.username }}</p>
-      <p><strong>Activated: </strong> {{ user.is_activated ? "Yes" : "No" }}</p>
-      <p *ngIf="user.is_superuser"><strong>Superuser: </strong>Yes</p>
-    </div>
+  <h2>User Profile</h2>
+  <div class="profile-picture">
+    <img *ngIf="profileImage; else noImage" [src]="profileImage" alt="Profile Picture">
+    <ng-template #noImage>
+      <p>No profile picture available.</p>
+    </ng-template>
+    <input type="file" (change)="onFileChange($event)">
+    <button (click)="uploadProfilePicture()">Upload</button>    
   </div>
-  
+  <div class="profile-details">
+    <p><strong>Name:</strong> {{ user.firstname + " " + user.lastname }}</p>
+    <p><strong>Email:</strong> {{ user.email }}</p>
+    <p><strong>Username:</strong> {{ user.username }}</p>
+    <p><strong>Activated: </strong> {{ user.is_activated ? "Yes" : "No" }}</p>
+    <p *ngIf="user.is_superuser"><strong>Superuser: </strong>Yes</p>
+  </div>
+</div>
