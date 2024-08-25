@@ -50,7 +50,7 @@ export class AddWordComponent {
         this.resetForm();
         this.successMsg = "So'z muvaffaqiyatli saqlandi...";
         setTimeout(() => {
-          window.location.reload();  
+          this.successMsg = "";
         }, 2000)
 
       }

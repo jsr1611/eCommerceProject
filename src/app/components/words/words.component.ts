@@ -23,7 +23,7 @@ export class WordsComponent implements OnInit{
   updateWord(index: number, id: string, category: Category){
     console.log("index of the word: ", index, id);
     const updatedWord: Word = {
-      _id: '',
+      _id: id,
       arabic: (document.getElementById(index+"_arabic") as HTMLInputElement).value,
       pronunciation: (document.getElementById(index+"_pronunciation") as HTMLInputElement).value,
       uzbek: (document.getElementById(index+"_uzbek") as HTMLInputElement).value,
@@ -33,7 +33,10 @@ export class WordsComponent implements OnInit{
     };
     
     console.log("word to update: ", updatedWord);
-    
+    this.dictService.updateWord(updatedWord).subscribe({
+      next: (response => console.log(response)),
+      error: (error => console.error(error))
+    });
   }
 
   async refresh(){

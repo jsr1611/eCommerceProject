@@ -21,8 +21,6 @@ export class AuthService {
   }
 
   signup(user: User): Observable<any> {
-    console.log("user info sent: ", user);
-    
     return this.http.post(`${this.baseUrl}/signup`, { user });
   }
 
@@ -41,13 +39,10 @@ export class AuthService {
 
   // Optionally, add a method to store and retrieve the JWT token
   setToken(token: string): void {
-    console.log("Setting token to local storage...");
     localStorage.setItem('token', token);
   }
 
   getToken(): string | null {
-    console.log("Getting token from local storage..");
-    
     return localStorage.getItem('token');
   }
 
