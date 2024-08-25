@@ -17,6 +17,7 @@ export class AddWordComponent {
     uzbek: '',
     english: '',
     category: Category.Noun,
+    remark: '',
   };
 
   categories: Category[] = Object.values(Category); // Enum values
@@ -69,6 +70,7 @@ export class AddWordComponent {
       uzbek: '',
       english: '',
       category: Category.Noun,
+      remark: '',
     };
   }
 }
