@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { User } from 'src/app/models/user';
 import { AuthService } from 'src/app/services/AuthService';
@@ -28,6 +28,7 @@ export class UserPageComponent implements OnInit {
   ngOnInit(): void {
     // Fetch user profile data from the backend if needed
     // This is just a placeholder
+    try{
     this.authService.getUserProfile().subscribe({
       next: (data: any) => {
         this.user = data.user;
@@ -38,8 +39,16 @@ export class UserPageComponent implements OnInit {
         }
         
       },
-      error: (err) => console.log('Error fetching user profile', err)
-    });
+      error: (err: HttpErrorResponse) => {
+        console.log('Error fetching user profile', (err.error ? err.error.message : err.message));
+        if(err.status === 401){
+          localStorage.removeItem('token');
+        }
+        }
+    });   
+  }catch(err){
+    console.error(err);
+  }
   }
 
   onFileChange(event: any) {
