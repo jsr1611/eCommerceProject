@@ -10,7 +10,6 @@ import { AuthService } from 'src/app/services/AuthService';
   styleUrls: ['./user-page.component.css']
 })
 export class UserPageComponent implements OnInit {
-  profileImage: string | ArrayBuffer | null = null;
   protected user: User = {
     username: '',
     email: '',
@@ -23,72 +22,59 @@ export class UserPageComponent implements OnInit {
   selectedFile: File | null = null;
   maxSizeInMB = 2;
 
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  constructor(private http: HttpClient, private authService: AuthService) { }
 
   ngOnInit(): void {
-    // Fetch user profile data from the backend if needed
-    // This is just a placeholder
-    try{
-    this.authService.getUserProfile().subscribe({
-      next: (data: any) => {
-        this.user = data.user;
-        console.log("Data retrieved: ", data.user);
-        // Convert the stored binary data to a displayable format
-        if (this.user.profilePicture && this.user.profilePicture.byteLength > 10) {
-          this.profileImage = 'data:image/jpeg;base64,' + this.user.profilePicture;
+    try {
+      this.authService.getUserProfile().subscribe({
+        next: (data: any) => {
+          this.user = data.user;
+        },
+        error: (err: HttpErrorResponse) => {
+          console.log('Error fetching user profile', (err.error ? err.error.message : err.message));
+          if (err.status === 401) {
+            localStorage.removeItem('token');
+          }
         }
-        
-      },
-      error: (err: HttpErrorResponse) => {
-        console.log('Error fetching user profile', (err.error ? err.error.message : err.message));
-        if(err.status === 401){
-          localStorage.removeItem('token');
-        }
-        }
-    });   
-  }catch(err){
-    console.error(err);
-  }
+      });
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   onFileChange(event: any) {
     this.selectedFile = event.target.files[0];
   }
-  
+
 
   onFileSelected(event: Event): void {
-    console.log("file selected...");
-    
     const fileInput = event.target as HTMLInputElement;
     if (fileInput.files && fileInput.files.length > 0) {
       this.selectedFile = fileInput.files[0];
-  
+
       // Convert the max size from MB to bytes
       const maxSizeInBytes = this.maxSizeInMB * 1024 * 1024;
-  
+
       if (this.selectedFile.size > maxSizeInBytes) {
         alert(`File is too large. Maximum allowed size is ${this.maxSizeInMB} MB.`);
         this.selectedFile = null; // Clear the selected file
-        this.profileImage = null; // Clear the image preview
         return;
       }
-  
+
       const reader = new FileReader();
       reader.onload = () => {
-        this.profileImage = reader.result as string;  // Update the image preview
-        console.log("profileimage: ", this.profileImage);
-        
+        (document.getElementById('profile-picture') as HTMLImageElement).src = reader.result as string;
       };
       reader.readAsDataURL(this.selectedFile);
     }
   }
-  
+
 
   uploadProfilePicture(): void {
     if (this.selectedFile) {
       const formData = new FormData();
       formData.append('profilePicture', this.selectedFile);
-  
+
       this.authService.uploadPicture(formData).subscribe({
         next: (response: any) => {
           // Handle success
@@ -101,5 +87,5 @@ export class UserPageComponent implements OnInit {
       });
     }
   }
-  
+
 }

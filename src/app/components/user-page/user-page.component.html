@@ -2,7 +2,7 @@
   <h2>User Profile</h2>
   <div class="profile-content">
     <div class="profile-picture">
-      <img *ngIf="profileImage; else noImage" [src]="profileImage" alt="Profile Picture">
+      <img *ngIf="user.profilePicture; else noImage" [src]="'data:image/jpeg;base64,' + user.profilePicture" alt="Profile Picture">
       <ng-template #noImage>
         <img id="profile-picture" src="/assets/images/default-profile-image.jpg" alt="default profile image">
       </ng-template>
