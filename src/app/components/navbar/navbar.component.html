@@ -24,18 +24,26 @@
         <!-- TODO implement black/white theme changer -->
         <!-- <button id="theme-changer" class="btn btn-light" (click)="changeThem()"><i class="bi bi-sun-fill"></i></button> -->
         <ul class="navbar-nav ms-auto">
-          <li *ngIf="!authService.getToken()" class="nav-item">
-            <a class="nav-link" routerLink="/login">Login</a>
+          <li *ngIf="!authService.getToken()" class="nav-item dropdown d-flex align-items-center">
+            <a class="nav-link dropdown-toggle" href="#" id="loginDropdown" role="button" 
+            data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-three-dots-vertical"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="loginDropdown">
+              <li>
+                <a class="dropdown-item" routerLink="/login">Login</a>
+              </li>
+              <li>
+                <a class="dropdown-item" routerLink="/signup">Sign Up</a>
+              </li>
+            </ul>
           </li>
-          <li *ngIf="!authService.getToken()" class="nav-item">
-            <a class="nav-link" routerLink="/signup">Sign Up</a>
-          </li>
-          <li *ngIf="authService.getToken()" class="nav-item dropdown">
+          <li *ngIf="authService.getToken()" class="nav-item dropdown d-flex align-items-center">
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown"
               aria-expanded="false">
-              <img src="assets/user-icon.png" alt="User Icon" class="user-icon">
+              <img src="assets/images/default-profile-image.jpg" alt="User Icon" class="user-icon">
             </a>
-            <ul class="dropdown-menu" aria-labelledby="userDropdown">
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
               <li><a class="dropdown-item" routerLink="/profile">Profile</a></li>
               <li>
                 <hr class="dropdown-divider">
@@ -44,8 +52,6 @@
             </ul>
           </li>
         </ul>
-
-
       </div>
     </div>
   </div>

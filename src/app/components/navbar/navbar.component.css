@@ -5,3 +5,7 @@
     margin-right: 8px;
   }
   
+  .nav-link.dropdown-toggle::after {
+    display: none !important;
+  }
+  

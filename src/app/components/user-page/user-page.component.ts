@@ -34,7 +34,7 @@ export class UserPageComponent implements OnInit {
         this.user = data.user;
         console.log("Data retrieved: ", data.user);
         // Convert the stored binary data to a displayable format
-        if (this.user.profilePicture) {
+        if (this.user.profilePicture && this.user.profilePicture.byteLength > 10) {
           this.profileImage = 'data:image/jpeg;base64,' + this.user.profilePicture;
         }
         
@@ -57,26 +57,32 @@ export class UserPageComponent implements OnInit {
   
 
   onFileSelected(event: Event): void {
+    console.log("file selected...");
+    
     const fileInput = event.target as HTMLInputElement;
     if (fileInput.files && fileInput.files.length > 0) {
       this.selectedFile = fileInput.files[0];
-
+  
       // Convert the max size from MB to bytes
-    const maxSizeInBytes = this.maxSizeInMB * 1024 * 1024;
-
-    if (this.selectedFile && this.selectedFile.size > maxSizeInBytes) {
-      alert(`File is too large. Maximum allowed size is ${this.maxSizeInMB} MB.`);
-      this.selectedFile = null; // Clear the selected file
-      return;
-    }
-
+      const maxSizeInBytes = this.maxSizeInMB * 1024 * 1024;
+  
+      if (this.selectedFile.size > maxSizeInBytes) {
+        alert(`File is too large. Maximum allowed size is ${this.maxSizeInMB} MB.`);
+        this.selectedFile = null; // Clear the selected file
+        this.profileImage = null; // Clear the image preview
+        return;
+      }
+  
       const reader = new FileReader();
       reader.onload = () => {
-        this.profileImage = reader.result;  // For image preview
+        this.profileImage = reader.result as string;  // Update the image preview
+        console.log("profileimage: ", this.profileImage);
+        
       };
       reader.readAsDataURL(this.selectedFile);
     }
   }
+  
 
   uploadProfilePicture(): void {
     if (this.selectedFile) {

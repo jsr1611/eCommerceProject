@@ -14,3 +14,67 @@
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   }
   
+  .profile-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .profile-content {
+    display: flex;
+    align-items: flex-start;
+  }
+  
+  .profile-picture {
+    flex: 0 0 200px;
+    position: sticky;
+    top: 20px;
+    text-align: center;
+  }
+  
+  .profile-picture img {
+    width: 100%;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .upload-controls {
+    margin-top: 15px;
+  }
+  
+  .upload-button {
+    display: block;
+    width: 100%;
+    padding: 8px;
+    margin-top: 8px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+  }
+  
+  .upload-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .profile-details {
+    flex: 1;
+    margin-left: 30px;
+  }
+  
+  .profile-details p {
+    margin: 10px 0;
+    font-size: 16px;
+  }
+  
