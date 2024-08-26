@@ -1,5 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { User } from 'src/app/models/user';
 import { AuthService } from 'src/app/services/AuthService';
 
@@ -22,7 +23,10 @@ export class UserPageComponent implements OnInit {
   selectedFile: File | null = null;
   maxSizeInMB = 2;
 
-  constructor(private http: HttpClient, private authService: AuthService) { }
+  constructor(private http: HttpClient, 
+    private authService: AuthService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     try {
@@ -34,6 +38,7 @@ export class UserPageComponent implements OnInit {
           console.log('Error fetching user profile', (err.error ? err.error.message : err.message));
           if (err.status === 401) {
             localStorage.removeItem('token');
+            this.router.navigate(['/login']);
           }
         }
       });
