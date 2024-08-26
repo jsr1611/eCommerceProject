@@ -63,9 +63,10 @@ export class UserPageComponent implements OnInit {
 
       const reader = new FileReader();
       reader.onload = () => {
-        (document.getElementById('profile-picture') as HTMLImageElement).src = reader.result as string;
+        this.user.profilePicture = (reader.result as string).split(',')[1];
       };
       reader.readAsDataURL(this.selectedFile);
+      this.uploadProfilePicture();
     }
   }
 

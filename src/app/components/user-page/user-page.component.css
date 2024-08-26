@@ -78,3 +78,55 @@
     font-size: 16px;
   }
   
+
+
+  .profile-picture {
+    position: relative;
+  }
+  
+  .profile-picture-label {
+    display: block;
+    cursor: pointer;
+  }
+  
+  .profile-picture-container {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .profile-picture-container img {
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: opacity 0.3s ease;
+  }
+  
+  .profile-picture-container:hover img {
+    opacity: 0.5; /* Lower opacity on hover */
+  }
+  
+  .overlay-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 16px;
+    pointer-events: none; /* Allow clicks to pass through the overlay */
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  .profile-picture-container:hover .overlay-text {
+    visibility: visible; /* Show the text when hovering */
+    opacity: 1; /* Fully opaque when hovering */
+  }
+  
+  .profile-picture-container:hover img {
+    opacity: 0.5; /* Lower opacity on hover */
+  }
+  
