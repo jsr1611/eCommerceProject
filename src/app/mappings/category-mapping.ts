@@ -10,3 +10,13 @@ export const CategoryMapping: { [key in Category]: string } = {
   [Category.Number]: 'Raqam',
   [Category.Other]: 'Boshqa'
 };
+
+
+export enum TestingLangulages {
+  uz_ar = "O`zbekcha-Arabcha",
+  uz_en = "O`zbekcha-Inglizcha",
+  ar_uz = "Arabcha-O`zbekcha",
+  ar_en = "Arabcha-Inglizcha",
+  en_uz = "Inglizcha-O`zbekcha",
+  en_ar = "Inglizcha-Arabcha" 
+};

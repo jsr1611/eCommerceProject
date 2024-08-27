@@ -93,3 +93,13 @@
 .word-arabic{
     font-size: 2.5rem;
 }
+
+#selectedLang{
+    border: 0;
+    display: flex;
+    justify-content: center;
+}
+select:focus {
+    outline: none;
+    box-shadow: none; /* This removes any shadow effect that might also appear */
+}

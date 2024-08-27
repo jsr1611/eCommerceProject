@@ -1,21 +1,24 @@
 <p class="test-info border rounded p-3 mb-4">
-  Testlar soni: {{dict.length}} | Natija: {{userCorrectTimes}} ta to'g'ri 
-  | {{userFalseTimes}} ta xato 
-  | Test raqami: {{totalTestNumbers.length}}  
-  | Eng yaxshi natijangiz: {{bestResult}}  
+  {{statements.numberOfTests}}: {{dict.length}} | {{statements.result}}: {{userCorrectTimes}} {{statements.correct}} 
+  | {{userFalseTimes}} {{statements.incorrect}} 
+  | {{statements.testNumber}}: {{totalTestNumbers.length}}  
+  | {{statements.bestResult}}: {{bestResult}}  
 </p>
 
 <p class="question-intro mb-4">
-  Bu so'zning ma'nosi nima?
+  {{questionStatementBefore[selectedLangIndex]}}
 </p>
 
 <h2 *ngIf="test; else elseBlock" class="test-word">
-<p *ngIf="UZ_AR; else AR_UZ">
-  <span  class="word-arabic">{{test.arabic}}</span> \ {{test.pronunciation}} \
-</p>
-<ng-template #AR_UZ>
-  {{test.uzbek}}
-</ng-template>
+  <p *ngIf="selectedLangIndex == 0 || selectedLangIndex == 1">
+    <span>{{test.uzbek}}</span>
+  </p>
+  <p *ngIf="selectedLangIndex == 2 || selectedLangIndex == 3">
+    <span  class="word-arabic">{{test.arabic}}</span> \ {{test.pronunciation}} \
+  </p>
+  <p *ngIf="selectedLangIndex == 4 || selectedLangIndex == 5">
+    <span  class="word-arabic">{{test.english}}</span>
+  </p>
 </h2>
 
 <ng-template #elseBlock>
@@ -24,9 +27,18 @@
   </h3>
 </ng-template>
 
-<p class="answer-prompt mb-3">Quyidagi javoblardan birini tanlang:</p>
+<p class="answer-prompt mb-3">{{questionStatementAfter[selectedLangIndex]}}:</p>
 
-<span *ngIf="UZ_AR; else AR_UZ">
+<span *ngIf="selectedLangIndex == 0 || selectedLangIndex == 5">
+  <button *ngFor="let ans of answers; index as i;" 
+          id="ans{{i}}" 
+          class="ans-btn btn btn-light mb-2"
+          (click)="submitAnswer(i)">
+    <i class="bi"></i> <span class="word-arabic">{{ans.arabic}}</span> \{{ans.pronunciation}}\
+  </button>
+  </span>
+
+<span *ngIf="selectedLangIndex == 2 || selectedLangIndex == 4">
 <button *ngFor="let ans of answers; index as i;" 
         id="ans{{i}}" 
         class="ans-btn btn btn-light mb-2"
@@ -34,24 +46,30 @@
   <i class="bi"></i> {{ans.uzbek}}
 </button>
 </span>
-
-<ng-template #AR_UZ>
-<button *ngFor="let ans of answers; index as i;" 
-        id="ans{{i}}" 
-        class="ans-btn btn btn-light mb-2"
-        (click)="submitAnswer(i)">
-  <i class="bi"></i> <span class="word-arabic">{{ans.arabic}}</span> \{{ans.pronunciation}}\
-</button>
-</ng-template>
-
+<span *ngIf="selectedLangIndex == 1 || selectedLangIndex == 3">
+  <button *ngFor="let ans of answers; index as i;" 
+          id="ans{{i}}" 
+          class="ans-btn btn btn-light mb-2"
+          (click)="submitAnswer(i)">
+    <i class="bi"></i> <span>{{ans.english}}</span>
+  </button>
+  </span>
 <div class="button-group mt-4">
 <button (click)="generateTest()" class="btn btn-primary" title="Keyingi testni yuklash">
-  Keyingi <i class="bi bi-arrow-right-square"></i>
+  {{nextButton[selectedIndex]}} <i class="bi bi-arrow-right-square"></i>
 </button>
-<button (click)="changeUzbArab()" class="btn btn-info" title="Tilni almashtirish">
-  Arab <i class="bi bi-arrow-left-right"></i> O'zbek
-</button>
+<select id="selectedLang"
+name="selectedLang"
+[(ngModel)]="selectedLang"
+(change)="changeLanguage(selectedLang)"
+>
+  <option *ngFor="let lang of languages; let i=index" [value]="lang">{{ lang }}</option>
+</select>
+<!-- <button (click)="changeUzbArab()" class="btn btn-info" title="Tilni almashtirish">
+  {{selectedLang}}
+</button> -->
+  <!-- Arab <i class="bi bi-arrow-left-right"></i> O'zbek -->
 <button (click)="stopTest()" class="btn btn-danger" title="Testni shu yerda yakunlaysizmi?">
-  Testni yakunlash <i class="bi bi-stop-circle"></i>
+  {{stopButton[selectedIndex]}} <i class="bi bi-stop-circle"></i>
 </button>
 </div>
