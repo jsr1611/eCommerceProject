@@ -6,7 +6,7 @@
 </p>
 
 <p class="question-intro mb-4">
-  {{questionStatementBefore[selectedLangIndex]}}
+  {{questionStatementBefore[selectedIndex]}}
 </p>
 
 <h2 *ngIf="test; else elseBlock" class="test-word">
@@ -27,7 +27,7 @@
   </h3>
 </ng-template>
 
-<p class="answer-prompt mb-3">{{questionStatementAfter[selectedLangIndex]}}:</p>
+<p class="answer-prompt mb-3">{{questionStatementAfter[selectedIndex]}}:</p>
 
 <span *ngIf="selectedLangIndex == 0 || selectedLangIndex == 5">
   <button *ngFor="let ans of answers; index as i;" 
