@@ -23,6 +23,7 @@ import { AuthInterceptor } from './config/AuthInterceptor';
 import { SignupComponent } from './components/signup/signup.component';
 import { UserPageComponent } from './components/user-page/user-page.component';
 import { AuthService } from './services/AuthService';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { AuthService } from './services/AuthService';
     SignupComponent,
     ResetPasswordComponent,
     UserPageComponent,
+    DashboardComponent,
   ],
   imports: [
     BrowserModule,
@@ -50,6 +52,7 @@ import { AuthService } from './services/AuthService';
       { path: 'signup', component: SignupComponent },
       { path: 'reset-password', component: ResetPasswordComponent },
       { path: 'profile', component: UserPageComponent, canActivate: [authGuard] },
+      { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },
       { path: 'home', component: HomeComponent },
       { path: 'add-word', component: AddWordComponent },
       { path: 'words', component: WordsComponent },
