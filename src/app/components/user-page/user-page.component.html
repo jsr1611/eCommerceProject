@@ -4,15 +4,27 @@
     <div class="profile-picture">
       <label for="file-upload" class="profile-picture-label">
         <div class="profile-picture-container">
-          <img *ngIf="user.profilePicture; else noImage" [src]="'data:image/jpeg;base64,' + user.profilePicture" alt="Profile Picture">
+          <img
+            *ngIf="user.profilePicture; else noImage"
+            [src]="'data:image/jpeg;base64,' + user.profilePicture"
+            alt="Profile Picture"
+          />
           <ng-template #noImage>
-            <img src="/assets/images/default-profile-image.jpg" alt="Default Profile Image">
+            <img
+              src="/assets/images/default-profile-image.jpg"
+              alt="Default Profile Image"
+            />
           </ng-template>
           <div class="overlay-text">Change Picture</div>
         </div>
       </label>
-      <input type="file" (change)="onFileSelected($event)" id="file-upload" style="display:none;">
-    </div>    
+      <input
+        type="file"
+        (change)="onFileSelected($event)"
+        id="file-upload"
+        style="display: none"
+      />
+    </div>
     <div class="profile-details">
       <p><strong>Name:</strong> {{ user.firstname + " " + user.lastname }}</p>
       <p><strong>Email:</strong> {{ user.email }}</p>
@@ -20,5 +32,54 @@
       <p><strong>Activated:</strong> {{ user.is_activated ? "Yes" : "No" }}</p>
       <p *ngIf="user.is_superuser"><strong>Superuser:</strong> Yes</p>
     </div>
+  </div>
+</div>
+
+<div class="container">
+  <div
+    class="table-responsive"
+    *ngIf="token != null && token.length > 1 && user.is_superuser"
+  >
+    <table class="table table-hover table-bordered text-center">
+      <thead class="thead-dark">
+        <tr>
+          <th>Tr</th>
+          <th scope="col">Picture</th>
+          <th scope="col">Name</th>
+          <th scope="col">Username</th>
+          <th scope="col">Email</th>
+          <th>Role</th>
+          <th scope="col">Active</th>
+          <th scope="col">Signup date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let userObj of users; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>
+            <img
+              *ngIf="userObj.profilePicture; else noImage"
+              [src]="
+                'data:image/jpeg;base64,' + convertImage(userObj.profilePicture)
+              "
+              alt="Photo"
+            />
+          </td>
+          <td>{{ userObj.firstname + " " + userObj.lastname }}</td>
+          <td>{{ userObj.username }}</td>
+          <td>{{ userObj.email }}</td>
+          <td>{{ userObj.is_superuser ? "Admin" : "User" }}</td>
+          <td>
+            <button
+              class="btn btn-primary"
+              (click)="changeStatus(i, userObj._id, userObj.is_activated)"
+            >
+              {{ user.is_activated ? "Active" : "Inactive" }}
+            </button>
+          </td>
+          <td>{{ displayDate(userObj.created_at) | date }}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>

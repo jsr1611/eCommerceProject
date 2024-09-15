@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { User } from 'src/app/models/user';
 import { AuthService } from 'src/app/services/AuthService';
 
+import { DatePipe } from '@angular/common';
+
 
 @Component({
   selector: 'app-user-page',
@@ -20,6 +22,8 @@ export class UserPageComponent implements OnInit {
     is_activated: false,
     is_superuser: false,
   }
+  protected users!: User[];
+  protected token: string | null = null;
   selectedFile: File | null = null;
   maxSizeInMB = 2;
 
@@ -29,10 +33,12 @@ export class UserPageComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.token = this.authService.getToken();
     try {
       this.authService.getUserProfile().subscribe({
         next: (data: any) => {
           this.user = data.user;
+          this.users = data.users;
         },
         error: (err: HttpErrorResponse) => {
           console.log('Error fetching user profile', (err.error ? err.error.message : err.message));
@@ -47,9 +53,23 @@ export class UserPageComponent implements OnInit {
     }
   }
 
+  changeStatus(_t46: number,arg1: string|undefined,arg2: boolean|undefined) {
+    alert('Not implemented yet');
+  }
+
+  displayDate(data: string|undefined) {
+    return data && new Date(data);
+  }
+
+  convertImage(img: any) {
+    return img && btoa(String.fromCharCode(...new Uint8Array(img)));
+  }
+
   onFileChange(event: any) {
     this.selectedFile = event.target.files[0];
   }
+
+  
 
 
   onFileSelected(event: Event): void {

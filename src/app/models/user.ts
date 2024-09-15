@@ -10,5 +10,6 @@ export interface User {
     is_activated?: boolean;
     is_superuser?: boolean;
     profilePicture?: string;
+    created_at?: string;
   }  
 
