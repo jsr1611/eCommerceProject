@@ -1,10 +1,7 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { DictionaryService } from './services/DictionaryService';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
 import { WordsComponent } from './components/words/words.component';
 import { RouterModule } from '@angular/router';
 import { NotFoundComponent } from './components/not-found/not-found.component';
@@ -24,8 +21,12 @@ import { SignupComponent } from './components/signup/signup.component';
 import { UserPageComponent } from './components/user-page/user-page.component';
 import { AuthService } from './services/AuthService';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { SecureService } from './services/SercureService';
+import { FormsModule } from '@angular/forms';
+import { BrowserModule  } from '@angular/platform-browser';
 
-@NgModule({ declarations: [
+@NgModule({ 
+    declarations: [
         AppComponent,
         WordsComponent,
         NotFoundComponent,
@@ -39,10 +40,14 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
         SignupComponent,
         ResetPasswordComponent,
         UserPageComponent,
-        DashboardComponent,
+        DashboardComponent
     ],
-    bootstrap: [AppComponent], imports: [BrowserModule,
+    bootstrap: [AppComponent], 
+    imports: [
+        BrowserModule,
         FormsModule,
+        // provideClientHydration(),
+        // TransferHttpCacheModule,
         RouterModule.forRoot([
             { path: '', component: HomeComponent },
             { path: 'login', component: LoginComponent },
@@ -58,5 +63,14 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
             { path: 'search/:searchKey', component: WordComponent },
             //404 Not Found
             { path: '**', component: NotFoundComponent },
-        ])], providers: [DictionaryService, NavBarService, UserService, AuthService, { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }, provideHttpClient(withInterceptorsFromDi()),] })
+        ])
+    ], 
+    providers: [
+        DictionaryService, NavBarService, UserService, AuthService, SecureService,
+        { 
+            provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }, 
+        provideHttpClient(withInterceptorsFromDi()),
+    ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    })
 export class AppModule { }

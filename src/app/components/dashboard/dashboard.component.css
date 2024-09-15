@@ -1,0 +1,23 @@
+/* app.component.css */
+/* .dashboard-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+} */
+
+.chart-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+.chart-item {
+  text-align: center;
+  position: relative;
+  min-width: 300px;
+}
+.chart-item canvas {
+    max-width: 100%;
+  }
