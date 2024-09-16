@@ -1,7 +1,7 @@
-import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Inject, OnChanges, SimpleChanges } from '@angular/core';
 import { NavBarService } from './navbar.service';
-import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/AuthService';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -11,7 +11,7 @@ import { AuthService } from 'src/app/services/AuthService';
 export class NavbarComponent implements OnChanges{
   constructor(
     private navbarService: NavBarService,
-    private router: Router,
+    @Inject(Router) private router: Router,
     public authService: AuthService,
   ){ }
 

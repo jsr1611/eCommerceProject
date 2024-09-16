@@ -1,10 +1,8 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { User } from 'src/app/models/user';
 import { AuthService } from 'src/app/services/AuthService';
-
-import { DatePipe } from '@angular/common';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -27,8 +25,7 @@ export class UserPageComponent implements OnInit {
   selectedFile: File | null = null;
   maxSizeInMB = 2;
 
-  constructor(private http: HttpClient, 
-    private authService: AuthService,
+  constructor(private authService: AuthService,
     @Inject(Router) private router: Router
   ) { }
 
