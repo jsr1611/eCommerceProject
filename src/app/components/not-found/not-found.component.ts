@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -7,7 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./not-found.component.css']
 })
 export class NotFoundComponent implements OnInit {
-  constructor(private router: Router){}
+  constructor(@Inject(Router) private router: Router){}
   
   ngOnInit(): void {
    setTimeout(()=>{
