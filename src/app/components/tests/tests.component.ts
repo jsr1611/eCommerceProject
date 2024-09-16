@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, Inject, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription, catchError, of } from "rxjs";
 import { DictionaryService } from "src/app/services/DictionaryService";
@@ -15,7 +15,7 @@ export class TestsComponent implements OnInit {
   [x: string]: any;
   constructor(
     private dictService: DictionaryService,
-    private router: Router,
+    @Inject(Router) private router: Router,
     private navbarService: NavBarService
   ) { }
   dict: Word[] = [];

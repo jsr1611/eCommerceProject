@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { User } from 'src/app/models/user';
 import { AuthService } from 'src/app/services/AuthService';
@@ -29,7 +29,7 @@ export class UserPageComponent implements OnInit {
 
   constructor(private http: HttpClient, 
     private authService: AuthService,
-    private router: Router
+    @Inject(Router) private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -53,7 +53,7 @@ export class UserPageComponent implements OnInit {
     }
   }
 
-  changeStatus(_t46: number,arg1: string|undefined,arg2: boolean|undefined) {
+  changeStatus(_t46: number, arg1: string|undefined, arg2: boolean|undefined) {
     alert('Not implemented yet');
   }
 
