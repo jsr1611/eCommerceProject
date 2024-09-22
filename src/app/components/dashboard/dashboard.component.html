@@ -1,26 +1,80 @@
-<div class="dashboard-container">
+<div class="container">
   <h2>Website Visits Statistics</h2>
+  <div class="dashboard-container">
+    <div class="chart-container">
+      <div class="chart-item">
+        <h3>Visits By Country</h3>
+        <canvas id="pieChart1" width="400" height="400"></canvas>
+      </div>
 
-  <div class="chart-container">
-    <div class="chart-item">
-      <h3>Visits By Country</h3>
-      <canvas id="pieChart1" width="400" height="400"></canvas>
-    </div>
-
-    <div class="chart-item">
+      <div class="chart-item">
         <h3>Device Information</h3>
         <canvas id="deviceChart" width="400" height="400"></canvas>
-    </div>
-  
-    <div class="chart-item">
-      <h3>Total Visits Over Time</h3>
-      <canvas id="barChart1" width="400" height="400"></canvas>
-    </div>
+      </div>
 
-    <div class="chart-item">
+      <div class="chart-item">
+        <h3>Total Visits Over Time</h3>
+        <canvas id="barChart1" width="400" height="400"></canvas>
+      </div>
+
+      <div class="chart-item">
         <h3>Unique Visits Over Time</h3>
         <canvas id="barChart2" width="400" height="400"></canvas>
       </div>
+    </div>
+  </div>
 
-    </div>  
+  <h2>User Management</h2>
+  <div class="dashboard-container">
+    <div class="table-responsive" *ngIf="token != null && token.length > 1">
+      <table class="table table-hover table-bordered text-center">
+        <thead class="thead-dark">
+          <tr>
+            <th>Tr</th>
+            <th scope="col">Picture</th>
+            <th scope="col">Name</th>
+            <th scope="col">Username</th>
+            <th scope="col">Email</th>
+            <th>Role</th>
+            <th scope="col">Active</th>
+            <th scope="col">Signup date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let userObj of users; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>
+              <img
+                *ngIf="userObj.profilePicture; else noImage"
+                [src]="
+                  'data:image/jpeg;base64,' +
+                  convertImage(userObj.profilePicture)
+                "
+                alt="Photo"
+              />
+              <ng-template #noImage>
+                <img
+                  src="/assets/images/default-profile-image.jpg"
+                  alt="Default Profile Image"
+                />
+              </ng-template>
+            </td>
+            <td>{{ userObj.firstname + " " + userObj.lastname }}</td>
+            <td>{{ userObj.username }}</td>
+            <td>{{ userObj.email }}</td>
+            <td>{{ userObj.is_superuser ? "Admin" : "User" }}</td>
+            <td>
+              <button
+                class="btn btn-primary"
+                (click)="changeStatus(i, userObj._id, userObj.is_activated)"
+              >
+                {{ userObj.is_activated ? "Active" : "Inactive" }}
+              </button>
+            </td>
+            <td>{{ displayDate(userObj.created_at) | date }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>

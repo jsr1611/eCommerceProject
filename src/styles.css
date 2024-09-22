@@ -4,6 +4,7 @@
   font-size: 2.5rem;
   color: #2c3e50;
   direction: rtl;
+  line-height: 0;
 }
 
 .word-meaning {

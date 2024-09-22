@@ -1,13 +1,16 @@
-import { AfterViewInit, Component } from "@angular/core";
+import { AfterViewInit, Component, OnInit } from "@angular/core";
 import { SecureService } from "src/app/services/SercureService";
 import { Chart, registerables } from "chart.js";
+import { User } from "src/app/models/user";
+import { AuthService } from "src/app/services/AuthService";
+import { HttpErrorResponse } from "@angular/common/http";
 Chart.register(...registerables)
 @Component({
   selector: "app-dashboard",
   templateUrl: "./dashboard.component.html",
   styleUrls: ["./dashboard.component.css"],
 })
-export class DashboardComponent implements AfterViewInit {
+export class DashboardComponent implements OnInit, AfterViewInit {
   numWeeks: number = 2;
   visitData: any[] = [];
   visitsByCountry: { [key: string]: number } = {};
@@ -16,10 +19,48 @@ export class DashboardComponent implements AfterViewInit {
   visitsOverTimeColor: { [key: string]: string } = {};
   deviceInfo: { [key: string]: number } = {};
 
-  constructor(private secureService: SecureService) {}
+  protected users!: User[];
+  protected token: string | null = null;
+
+  constructor(
+    private authService: AuthService,
+    private secureService: SecureService
+  ) {}
 
   ngAfterViewInit() {
     this.fetchVisitData();
+  }
+
+  changeStatus(_t46: number, arg1: string|undefined, arg2: boolean|undefined) {
+    alert('Not implemented yet');
+  }
+
+  convertImage(img: any) {
+    return img && btoa(String.fromCharCode(...new Uint8Array(img)));
+  }
+
+  displayDate(data: string|undefined) {
+    return data && new Date(data);
+  }
+
+  ngOnInit(): void {
+    this.token = this.authService.getToken();
+    try {
+      this.authService.getUserProfile().subscribe({
+        next: (data: any) => {
+          this.users = data.users;
+        },
+        error: (err: HttpErrorResponse) => {
+          console.log('Error fetching user profile', (err.error ? err.error.message : err.message));
+          if (err.status === 401) {
+            localStorage.removeItem('token');
+            // this.router.navigate(['/login']);
+          }
+        }
+      });
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   async fetchVisitData() {
