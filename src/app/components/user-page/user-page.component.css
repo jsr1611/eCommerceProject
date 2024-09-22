@@ -167,6 +167,8 @@ h2 {
 
 .btn-view {
   padding: 8px 16px;
+  margin: 0 5px;
+  height: 56px;
   background-color: #007bff;
   color: #fff;
   border: none;
@@ -277,3 +279,27 @@ h2 {
 canvas {
   max-width: 100%;
 }
+
+.month-picker .mat-calendar-period-button {
+  pointer-events: none;
+}
+
+.date-selector{
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.mat-form-field {
+  flex: 1; /* Makes the form field flexible */
+  min-width: 200px; /* Minimum width for the form field */
+  height: 56px; /* Fixed height for consistency */
+  margin-right: 8px; /* Space between form field and button */
+}
+/* Media queries for responsiveness */
+@media (max-width: 600px) {
+  .mat-form-field, .btn-view {
+    height: 48px; /* Adjust height for smaller screens */
+  }
+}
+

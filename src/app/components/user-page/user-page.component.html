@@ -40,49 +40,97 @@
   <h2>Monthly Expense Management</h2>
 
   <!-- Month Selector -->
-  <div class="month-selector">
-    <label for="month">Select Month:</label>
-    <input
-      type="month"
-      id="month"
-      name="month"
-      [value]="currentMonth"
-      (change)="onMonthChange($event)"
-      required
-    />
-    <button type="button" class="btn-view" (click)="viewExpenses()">View Expenses</button>
-  </div>
-  
+  <div class="date-selector">    
+    
+    <mat-form-field appearance="fill">
+      <input matInput [(ngModel)]="monthAndYear"
+                      [matDatepicker]="picker"
+                      [max]="today"
+                      (dateChange)="emitDateChange($event)" />
+      <mat-datepicker-toggle
+        matSuffix
+        [for]="picker">
+      </mat-datepicker-toggle>
+      <mat-datepicker #picker [startView]="'year'"
+                      (monthSelected)="monthChanged($event, picker)">
+      </mat-datepicker>
+    </mat-form-field>  
+
+    <div class="btn-align-horizontal">
+      <button type="button" class="btn-view" (click)="addNewExpense()">
+        Add New
+      </button>
+      <button type="button" class="btn-view" (click)="viewExpenses(ONE)">
+        View Expenses
+      </button>
+    </div>
+</div>
+
   <!-- Expense Form -->
-  <div class="expense-form">
+  <div class="expense-form" *ngIf="displayInput">
     <form (submit)="addExpense()">
       <div class="form-group">
         <label for="date">Date:</label>
-        <input type="date" id="date" name="date" required>
+        <input
+          type="date"
+          id="date"
+          name="date"
+          required
+          [(ngModel)]="todaysExpense.date"
+        />
       </div>
-      
+
       <div class="form-group">
         <label for="category">Category:</label>
-        <input type="text" id="category" name="category" placeholder="E.g., Food, Transport" required>
+        <input
+          type="text"
+          id="category"
+          name="category"
+          placeholder="E.g., Food, Transport"
+          required
+          [(ngModel)]="todaysExpense.category"
+        />
       </div>
-      
+
       <div class="form-group">
         <label for="amount">Amount:</label>
-        <input type="number" id="amount" name="amount" placeholder="Enter amount" required>
+        <input
+          type="text"
+          id="amount"
+          name="amount"
+          placeholder="Enter amount"
+          required
+          [value]="
+            todaysExpense.amount !== 0
+              ? (
+                  todaysExpense.amount | currency : 'KRW' : 'symbol' : '1.0-0'
+                )?.replace('₩', '')
+              : ''
+          "
+          (input)="onAmountChange($event)"
+        />
       </div>
-      
+
       <div class="form-group">
         <label for="description">Description:</label>
-        <textarea id="description" name="description" placeholder="Add a note..." rows="3"></textarea>
+        <textarea
+          id="description"
+          name="description"
+          placeholder="Add a note..."
+          rows="3"
+          [(ngModel)]="todaysExpense.description"
+        ></textarea>
       </div>
-      
+
       <button type="submit" class="btn-submit">Add Expense</button>
     </form>
   </div>
-  
+
   <!-- Expenses Table -->
   <div class="expense-table">
-    <h3>Expenses for <span id="selected-month">{{ selectedMonth }}</span></h3>
+    <h3>
+      Expenses for <span id="selected-month">{{ selectedMonthStr }}</span>
+    </h3>
     <table>
       <thead>
         <tr>
@@ -93,8 +141,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let expense of expenses">
-          <td>{{ expense.date }}</td>
+        <tr *ngFor="let expense of currentMonthExpenses">
+          <td>{{ expense.date | date }}</td>
           <td>{{ expense.category }}</td>
           <td>{{ expense.amount | currency }}</td>
           <td>{{ expense.description }}</td>
@@ -102,15 +150,16 @@
       </tbody>
     </table>
   </div>
-  
+
   <!-- Monthly Summary -->
   <div class="expense-summary">
-    <h3>Summary for {{ selectedMonth }}</h3>
-    <p>Total: <span>{{ monthlyTotal | currency }}</span></p>
+    <h3>Summary for {{ selectedMonthStr }}</h3>
+    <p>
+      Total: <span>{{ monthlyTotal | currency }}</span>
+    </p>
   </div>
 </div>
 
 <div class="chart-container">
   <canvas id="expenseChart"></canvas>
 </div>
-

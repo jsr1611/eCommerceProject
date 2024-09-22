@@ -1,18 +1,32 @@
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, Inject, OnInit } from "@angular/core";
+import { AfterViewInit, Component, EventEmitter, Inject, Input, OnInit, Output } from "@angular/core";
 import { User } from "src/app/models/user";
 import { AuthService } from "src/app/services/AuthService";
-import { Router } from "@angular/router";
 import { DatePipe } from "@angular/common";
-import { expense } from "src/app/models/expense";
+import { Expense } from "src/app/models/expense";
 import { Chart } from "chart.js";
+import { SecureService } from "src/app/services/SercureService";
+import { MatDatepickerInputEvent } from "@angular/material/datepicker";
+import { DateAdapter, MAT_DATE_LOCALE } from "@angular/material/core";
+import { MonthpickerDateAdapter } from "src/app/mappings/monthdatepicker-date-adapter";
+import { Platform } from "@angular/cdk/platform";
+import { Router } from "@angular/router";
+
+
 
 @Component({
   selector: "app-user-page",
   templateUrl: "./user-page.component.html",
   styleUrls: ["./user-page.component.css"],
+  providers: [
+    {
+      provide: DateAdapter,
+      useClass: MonthpickerDateAdapter,
+      deps: [MAT_DATE_LOCALE, Platform],
+    },
+  ],
 })
-export class UserPageComponent implements OnInit {
+export class UserPageComponent implements OnInit, AfterViewInit {
   protected user: User = {
     username: "",
     email: "",
@@ -22,46 +36,50 @@ export class UserPageComponent implements OnInit {
     is_activated: false,
     is_superuser: false,
   };
-  currentMonth!: string;
-  selectedMonth!: string;
-  expenses: expense[] = [];
-  monthlyTotal = 0;
-
-  // Sample data for monthly expenses
-  monthlyExpenses = [
-    { month: 'January', total: 450 },
-    { month: 'February', total: 380 },
-    { month: 'March', total: 560 },
-    { month: 'April', total: 420 },
-    { month: 'May', total: 510 },
-    { month: 'June', total: 470 },
-    { month: 'July', total: 490 },
-    { month: 'August', total: 430 },
-    { month: 'September', total: 520 },
-    { month: 'October', total: 600 },
-    { month: 'November', total: 540 },
-    { month: 'December', total: 580 }
-  ];
-
-  public expenseChart: any;
-
+  protected expenseChart: any;
   protected token: string | null = null;
+  @Input()
+  protected monthAndYear: Date = new Date();
+  @Output()
+  protected monthAndYearChange = new EventEmitter<Date | null>();
   selectedFile: File | null = null;
   maxSizeInMB = 2;
+  displayInput:boolean = false;
+  selectedMonthStr!: string;
+  today: Date = new Date();
+  monthlyTotal = 0;
+  protected readonly ONE: string = 'one';
+  todaysExpense: Expense = {
+    date: new Date().toISOString().split('T')[0], // Set today's date
+    category: '',
+    amount: 0,
+    description: ''
+  };
+  monthlyExpenses:{
+    month: string,
+    total: string,
+  }[] = [];
+  currentMonthExpenses: Expense[] = [];
 
   constructor(
     private authService: AuthService,
     @Inject(Router) private router: Router,
-    private datePipe: DatePipe
-  ) {}
+    @Inject(DatePipe) private datePipe: DatePipe,
+    private secureService: SecureService,
+  ) { }
+
+  ngAfterViewInit(): void {
+    console.log("ngAfterViewInit");
+    
+    this.viewExpenses(this.ONE); 
+  }
 
   ngOnInit(): void {
-    this.currentMonth = this.datePipe.transform(new Date(), "yyyy-MM")!;
-    this.selectedMonth = this.datePipe.transform(new Date(), "MMMM yyyy")!;
-    this.viewExpenses(); // Load expenses for the current month by default
+    console.log("ngOnInit");
+    this.selectedMonthStr = this.datePipe.transform(new Date(this.monthAndYear), "MMMM yyyy")!;    
     this.token = this.authService.getToken();
     try {
-      this.authService.getUserProfile('one').subscribe({
+      this.authService.getUserProfile(this.ONE).subscribe({
         next: (data: any) => {
           this.user = data.user;
         },
@@ -81,6 +99,20 @@ export class UserPageComponent implements OnInit {
     }
     this.createChart();
   }
+
+  onAmountChange(event: Event): void {
+    const input = event.target as HTMLInputElement; // Type assertion
+    const value = input.value.replace(/[^0-9.-]+/g, ''); // Remove non-numeric characters
+    this.todaysExpense.amount = value ? parseFloat(value) : 0; // Update amount
+  }
+
+  calculateMonthlyTotal(){
+    this.monthlyTotal = 0;
+    this.currentMonthExpenses.map(item => {
+      this.monthlyTotal += item.amount;
+  });
+  }
+
 
   createChart() {
     const ctx = document.getElementById('expenseChart') as HTMLCanvasElement;
@@ -108,22 +140,59 @@ export class UserPageComponent implements OnInit {
     });
   }
 
-  
-
-  onMonthChange(event: any): void {
-    const selectedDate = new Date(event.target.value);
-    this.selectedMonth = this.datePipe.transform(selectedDate, "MMMM yyyy")!;
-    this.viewExpenses();
+  public emitDateChange(event: MatDatepickerInputEvent<Date | null, unknown>): void {
+    this.monthAndYearChange.emit(event.value);
   }
-
-  viewExpenses(): void {
-    // Logic to fetch and display expenses for the selected month
-    // Update this.expenses and this.monthlyTotal based on the selected month
+  public monthChanged(value: any, widget: any): void {
+    this.monthAndYear = value;
+    // console.log('selectedMonthYear: ',value.getMonth(), value.getFullYear());
+    this.selectedMonthStr = this.datePipe.transform(new Date(value), "MMMM yyyy")!;
+    this.viewExpenses(this.ONE);
+    widget.close();
+  }
+  
+  viewExpenses(all: string): void {
+    console.log("calling expenses API");
+    
+    try {
+      const monthYearStr = `${this.monthAndYear.getMonth() + 1}, ${this.monthAndYear.getFullYear()}`;
+      this.secureService.getExpense(monthYearStr, all).subscribe({
+        next: (data: any) => {
+          console.log(data);
+          this.currentMonthExpenses = data.expenses;
+          this.calculateMonthlyTotal();
+        },
+        error: (err: HttpErrorResponse) => {
+          console.log('Error fetching expense data', (err.error ? err.error.message : err.message));
+          if (err.status === 401) {
+            localStorage.removeItem('token');
+            this.router.navigate(['/login']);
+          }
+        }
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  addNewExpense(){
+    this.displayInput = !this.displayInput;
   }
 
   addExpense(): void {
-    // Logic to add a new expense
-    // Recalculate monthlyTotal and update expenses list
+    console.log("today's expense:");
+    console.log(this.todaysExpense);
+    this.secureService.saveExpense(this.todaysExpense).subscribe({
+      next: (response: any) => {
+        // Handle success
+        console.log("Expense saved successfully");
+        console.log(response);
+        this.currentMonthExpenses.push(this.todaysExpense);
+        this.monthlyTotal += this.todaysExpense.amount;
+      },
+      error: (error: any) => {
+        console.error("Error saving expense data:", error);
+      },
+    });
   }
 
   convertImage(img: any) {

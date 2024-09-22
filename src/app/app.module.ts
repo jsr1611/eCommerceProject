@@ -3,7 +3,6 @@ import { AppComponent } from './app.component';
 import { DictionaryService } from './services/DictionaryService';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { WordsComponent } from './components/words/words.component';
-import { RouterModule } from '@angular/router';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { TestsComponent } from './components/tests/tests.component';
 import { HomeComponent } from './components/home/home.component';
@@ -22,9 +21,14 @@ import { UserPageComponent } from './components/user-page/user-page.component';
 import { AuthService } from './services/AuthService';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { SecureService } from './services/SercureService';
-import { FormsModule } from '@angular/forms';
-import { BrowserModule  } from '@angular/platform-browser';
-import { DatePipe } from '@angular/common';
+import { CurrencyPipe, DatePipe } from '@angular/common';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatInputModule } from '@angular/material/input';
+import { MatNativeDateModule } from '@angular/material/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
+import { RouterModule } from '@angular/router';
 
 @NgModule({ 
     declarations: [
@@ -47,6 +51,10 @@ import { DatePipe } from '@angular/common';
     imports: [
         BrowserModule,
         FormsModule,
+        ReactiveFormsModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        MatInputModule,
         // provideClientHydration(),
         // TransferHttpCacheModule,
         RouterModule.forRoot([
@@ -62,15 +70,14 @@ import { DatePipe } from '@angular/common';
             { path: 'words/:searchKey', component: WordComponent },
             { path: 'tests', component: TestsComponent },
             { path: 'search/:searchKey', component: WordComponent },
-            //404 Not Found
             { path: '**', component: NotFoundComponent },
         ])
     ], 
     providers: [
-        DictionaryService, NavBarService, UserService, AuthService, SecureService, DatePipe,
+        DictionaryService, NavBarService, UserService, AuthService, SecureService, DatePipe, CurrencyPipe,
         { 
             provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }, 
-        provideHttpClient(withInterceptorsFromDi()),
+            provideHttpClient(withInterceptorsFromDi()), provideAnimationsAsync(),
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     })
