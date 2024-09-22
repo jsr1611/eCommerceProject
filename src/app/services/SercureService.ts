@@ -29,7 +29,7 @@ export class SecureService extends AuthService {
       const monthYearArr = (monthYear != undefined && monthYear.length > 5) ? monthYear?.split(',') : [];
       if(monthYearArr?.length === 2){
         params = params.set('month', monthYearArr[0].toString());
-        params = params.set('ýear', monthYearArr[1].toString());
+        params = params.set('year', monthYearArr[1].toString());
       }
     }
     return this.http.get(this.url + `/expenses`, {
