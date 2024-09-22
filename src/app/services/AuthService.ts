@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { environment } from "src/environments/environment";
 import { User } from "../models/user";
@@ -32,9 +32,11 @@ export class AuthService {
     return this.http.post(`${this.baseUrl}/signup`, { user });
   }
 
-  getUserProfile(): Observable<User> {
+  getUserProfile(all: string): Observable<User> {
+    const params = new HttpParams().set('all', (all === 'all').toString());
     return this.http.get<User>(`${this.baseUrl}/profile`, {
       headers: this.getHeaders(),
+      params: params,
     });
   }
 

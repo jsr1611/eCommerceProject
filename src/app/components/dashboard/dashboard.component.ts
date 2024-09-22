@@ -1,9 +1,10 @@
-import { AfterViewInit, Component, OnInit } from "@angular/core";
+import { AfterViewInit, Component, Inject, OnInit } from "@angular/core";
 import { SecureService } from "src/app/services/SercureService";
 import { Chart, registerables } from "chart.js";
 import { User } from "src/app/models/user";
 import { AuthService } from "src/app/services/AuthService";
 import { HttpErrorResponse } from "@angular/common/http";
+import { Router } from "@angular/router";
 Chart.register(...registerables)
 @Component({
   selector: "app-dashboard",
@@ -24,6 +25,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   constructor(
     private authService: AuthService,
+    @Inject(Router) private router: Router,
     private secureService: SecureService
   ) {}
 
@@ -46,7 +48,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.token = this.authService.getToken();
     try {
-      this.authService.getUserProfile().subscribe({
+      this.authService.getUserProfile('all').subscribe({
         next: (data: any) => {
           this.users = data.users;
         },
@@ -54,7 +56,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           console.log('Error fetching user profile', (err.error ? err.error.message : err.message));
           if (err.status === 401) {
             localStorage.removeItem('token');
-            // this.router.navigate(['/login']);
+            this.router.navigate(['/login']);
           }
         }
       });

@@ -24,6 +24,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { SecureService } from './services/SercureService';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule  } from '@angular/platform-browser';
+import { DatePipe } from '@angular/common';
 
 @NgModule({ 
     declarations: [
@@ -66,7 +67,7 @@ import { BrowserModule  } from '@angular/platform-browser';
         ])
     ], 
     providers: [
-        DictionaryService, NavBarService, UserService, AuthService, SecureService,
+        DictionaryService, NavBarService, UserService, AuthService, SecureService, DatePipe,
         { 
             provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }, 
         provideHttpClient(withInterceptorsFromDi()),

@@ -35,3 +35,82 @@
   </div>
 </div>
 
+<hr />
+<div class="expense-container">
+  <h2>Monthly Expense Management</h2>
+
+  <!-- Month Selector -->
+  <div class="month-selector">
+    <label for="month">Select Month:</label>
+    <input
+      type="month"
+      id="month"
+      name="month"
+      [value]="currentMonth"
+      (change)="onMonthChange($event)"
+      required
+    />
+    <button type="button" class="btn-view" (click)="viewExpenses()">View Expenses</button>
+  </div>
+  
+  <!-- Expense Form -->
+  <div class="expense-form">
+    <form (submit)="addExpense()">
+      <div class="form-group">
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="category">Category:</label>
+        <input type="text" id="category" name="category" placeholder="E.g., Food, Transport" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="amount">Amount:</label>
+        <input type="number" id="amount" name="amount" placeholder="Enter amount" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" placeholder="Add a note..." rows="3"></textarea>
+      </div>
+      
+      <button type="submit" class="btn-submit">Add Expense</button>
+    </form>
+  </div>
+  
+  <!-- Expenses Table -->
+  <div class="expense-table">
+    <h3>Expenses for <span id="selected-month">{{ selectedMonth }}</span></h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Category</th>
+          <th>Amount</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let expense of expenses">
+          <td>{{ expense.date }}</td>
+          <td>{{ expense.category }}</td>
+          <td>{{ expense.amount | currency }}</td>
+          <td>{{ expense.description }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <!-- Monthly Summary -->
+  <div class="expense-summary">
+    <h3>Summary for {{ selectedMonth }}</h3>
+    <p>Total: <span>{{ monthlyTotal | currency }}</span></p>
+  </div>
+</div>
+
+<div class="chart-container">
+  <canvas id="expenseChart"></canvas>
+</div>
+
