@@ -57,7 +57,14 @@
     </mat-form-field>  
 
     <div class="btn-align-horizontal">
-      <button type="button" class="btn-view" (click)="addNewExpense()">
+      <mat-form-field appearance="fill">
+        <mat-select placeholder="Select Currency" [(value)]="selectedCurrency" (selectionChange)="onCurrencyChange($event.value)">
+          <mat-option *ngFor="let currency of popularCurrencies" [value]="currency.code">
+            {{ currency.name }} ({{ currency.symbol }})
+          </mat-option>
+        </mat-select>
+      </mat-form-field>      
+      <button type="button" class="btn-view" (click)="showAddNewExpense()">
         Add New
       </button>
       <button type="button" class="btn-view" (click)="viewExpenses(ONE)">
@@ -100,13 +107,7 @@
           name="amount"
           placeholder="Enter amount"
           required
-          [value]="
-            todaysExpense.amount !== 0
-              ? (
-                  todaysExpense.amount | currency : 'KRW' : 'symbol' : '1.0-0'
-                )?.replace('₩', '')
-              : ''
-          "
+          [value]="todaysExpense.amount !== 0 ? (todaysExpense.amount | currency : selectedCurrency : 'symbol' : '1.0-0') : '' "
           (input)="onAmountChange($event)"
         />
       </div>
@@ -144,7 +145,7 @@
         <tr *ngFor="let expense of currentMonthExpenses">
           <td>{{ expense.date | date }}</td>
           <td>{{ expense.category }}</td>
-          <td>{{ expense.amount | currency }}</td>
+          <td>{{ (expense.amount | currency : selectedCurrency : 'symbol' : '1.0-0') }}</td>
           <td>{{ expense.description }}</td>
         </tr>
       </tbody>
@@ -155,7 +156,7 @@
   <div class="expense-summary">
     <h3>Summary for {{ selectedMonthStr }}</h3>
     <p>
-      Total: <span>{{ monthlyTotal | currency }}</span>
+      Total: <span>{{ (monthlyTotal | currency : selectedCurrency : 'symbol' : '1.0-0') }}</span>
     </p>
   </div>
 </div>

@@ -303,3 +303,11 @@ canvas {
   }
 }
 
+
+.mat-select {
+  min-width: 150px;
+}
+
+.mat-option-text {
+  font-size: 14px;
+}

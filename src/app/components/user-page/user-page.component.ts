@@ -46,9 +46,11 @@ export class UserPageComponent implements OnInit, AfterViewInit {
   maxSizeInMB = 2;
   displayInput:boolean = false;
   selectedMonthStr!: string;
+  selectedYear:number = new Date().getFullYear();
   today: Date = new Date();
   monthlyTotal = 0;
   protected readonly ONE: string = 'one';
+  protected readonly ALL: string = 'all';
   todaysExpense: Expense = {
     date: new Date().toISOString().split('T')[0], // Set today's date
     category: '',
@@ -60,6 +62,26 @@ export class UserPageComponent implements OnInit, AfterViewInit {
     total: string,
   }[] = [];
   currentMonthExpenses: Expense[] = [];
+  popularCurrencies = [
+    { code: 'KRW', name: 'South Korean Won', symbol: '₩' },
+    { code: 'UZS', name: 'Uzbek Som', symbol: 'soʻm' },
+    { code: 'KZT', name: 'Kazakh Tenge', symbol: '₸' },
+    { code: 'TJS', name: 'Tajik Somoni', symbol: 'SM' }, 
+    { code: 'KGS', name: 'Kyrgyz Som', symbol: 'с' }, 
+    { code: 'RUB', name: 'Russian Ruble', symbol: '₽' },
+    { code: 'JPY', name: 'Japanese Yen', symbol: '¥' },
+    { code: 'CNY', name: 'Chinese Yuan', symbol: '¥' },
+    { code: 'PKR', name: 'Pakistani Rupee', symbol: '₨' },
+    { code: 'EGP', name: 'Egyptian Pound', symbol: 'ج.م' },
+    { code: 'AED', name: 'United Arab Emirates Dirham', symbol: 'د.إ' },
+    { code: 'SAR', name: 'Saudi Riyal', symbol: 'ر.س' },
+    { code: 'GBP', name: 'British Pound', symbol: '£' },
+    { code: 'EUR', name: 'Euro', symbol: '€' },
+    { code: 'USD', name: 'US Dollar', symbol: '$' },
+    // Add more currencies as needed
+  ];
+
+  selectedCurrency: string = 'KRW';
 
   constructor(
     private authService: AuthService,
@@ -69,13 +91,15 @@ export class UserPageComponent implements OnInit, AfterViewInit {
   ) { }
 
   ngAfterViewInit(): void {
-    console.log("ngAfterViewInit");
-    
     this.viewExpenses(this.ONE); 
+    this.viewExpenses(this.ALL);
   }
 
   ngOnInit(): void {
-    console.log("ngOnInit");
+    let savedCurrency = localStorage.getItem('currency');
+    if(savedCurrency){
+      this.selectedCurrency = savedCurrency;
+    }
     this.selectedMonthStr = this.datePipe.transform(new Date(this.monthAndYear), "MMMM yyyy")!;    
     this.token = this.authService.getToken();
     try {
@@ -97,13 +121,22 @@ export class UserPageComponent implements OnInit, AfterViewInit {
     } catch (err) {
       console.error(err);
     }
-    this.createChart();
+    // this.createChart();
   }
 
   onAmountChange(event: Event): void {
-    const input = event.target as HTMLInputElement; // Type assertion
-    const value = input.value.replace(/[^0-9.-]+/g, ''); // Remove non-numeric characters
-    this.todaysExpense.amount = value ? parseFloat(value) : 0; // Update amount
+    const input = event.target as HTMLInputElement;
+    const value = input.value.replace(/[^0-9.-]+/g, ''); 
+    this.todaysExpense.amount = value ? parseFloat(value) : 0; 
+  }
+
+  onCurrencyChange(currencyCode: string){
+    localStorage.setItem('currency', currencyCode);
+    if(this.expenseChart && this.expenseChart.data && this.expenseChart.data.datasets){
+      const dataset = this.expenseChart.data.datasets[0];
+      dataset.label = `Total monthly expenses for ${this.selectedYear} in ${this.selectedCurrency}`; 
+      this.expenseChart.update();
+    }
   }
 
   calculateMonthlyTotal(){
@@ -115,6 +148,9 @@ export class UserPageComponent implements OnInit, AfterViewInit {
 
 
   createChart() {
+    if (this.expenseChart) {
+      this.expenseChart.destroy();
+    }
     const ctx = document.getElementById('expenseChart') as HTMLCanvasElement;
     this.expenseChart = new Chart(ctx, {
       type: 'bar',
@@ -122,7 +158,7 @@ export class UserPageComponent implements OnInit, AfterViewInit {
         labels: this.monthlyExpenses.map(expense => expense.month),
         datasets: [
           {
-            label: 'Total Expenses (KRW)',
+            label: `Total monthly expenses for ${this.selectedYear} in ${this.selectedCurrency}`,
             data: this.monthlyExpenses.map(expense => expense.total),
             backgroundColor: 'rgba(54, 162, 235, 0.6)',
             borderColor: 'rgba(54, 162, 235, 1)',
@@ -145,22 +181,29 @@ export class UserPageComponent implements OnInit, AfterViewInit {
   }
   public monthChanged(value: any, widget: any): void {
     this.monthAndYear = value;
-    // console.log('selectedMonthYear: ',value.getMonth(), value.getFullYear());
+    this.selectedYear = value.getFullYear();
+    let currentYear = new Date().getFullYear()
+
     this.selectedMonthStr = this.datePipe.transform(new Date(value), "MMMM yyyy")!;
     this.viewExpenses(this.ONE);
+    if(currentYear !== this.selectedYear){
+      this.viewExpenses(this.ALL);
+    }
     widget.close();
   }
   
   viewExpenses(all: string): void {
-    console.log("calling expenses API");
-    
     try {
-      const monthYearStr = `${this.monthAndYear.getMonth() + 1}, ${this.monthAndYear.getFullYear()}`;
+      const monthYearStr = `${this.monthAndYear.getMonth()},${this.monthAndYear.getFullYear()}`;
       this.secureService.getExpense(monthYearStr, all).subscribe({
         next: (data: any) => {
-          console.log(data);
-          this.currentMonthExpenses = data.expenses;
-          this.calculateMonthlyTotal();
+          if(all === 'all'){
+            this.monthlyExpenses = data.expenses;
+            this.createChart();
+          }else{
+            this.currentMonthExpenses = data.expenses;
+            this.calculateMonthlyTotal();
+          }
         },
         error: (err: HttpErrorResponse) => {
           console.log('Error fetching expense data', (err.error ? err.error.message : err.message));
@@ -174,13 +217,11 @@ export class UserPageComponent implements OnInit, AfterViewInit {
       console.error(err);
     }
   }
-  addNewExpense(){
+  showAddNewExpense(){
     this.displayInput = !this.displayInput;
   }
 
   addExpense(): void {
-    console.log("today's expense:");
-    console.log(this.todaysExpense);
     this.secureService.saveExpense(this.todaysExpense).subscribe({
       next: (response: any) => {
         // Handle success

@@ -29,6 +29,9 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+
 
 @NgModule({ 
     declarations: [
@@ -55,6 +58,8 @@ import { RouterModule } from '@angular/router';
         MatDatepickerModule,
         MatNativeDateModule,
         MatInputModule,
+        MatFormFieldModule,
+        MatSelectModule,
         // provideClientHydration(),
         // TransferHttpCacheModule,
         RouterModule.forRoot([

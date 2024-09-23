@@ -25,12 +25,10 @@ export class SecureService extends AuthService {
 
   getExpense(monthYear: string, all: string) {
     let params = new HttpParams().set('all', (all === 'all').toString());
-    if(all !== 'all'){
-      const monthYearArr = (monthYear != undefined && monthYear.length > 5) ? monthYear?.split(',') : [];
-      if(monthYearArr?.length === 2){
-        params = params.set('month', monthYearArr[0].toString());
-        params = params.set('year', monthYearArr[1].toString());
-      }
+    const monthYearArr = (monthYear != undefined && monthYear.length > 5) ? monthYear?.split(',') : [];
+    if(monthYearArr?.length === 2){
+      params = params.set('month', monthYearArr[0].toString());
+      params = params.set('year', monthYearArr[1].toString());
     }
     return this.http.get(this.url + `/expenses`, {
       headers: this.getHeaders(),
