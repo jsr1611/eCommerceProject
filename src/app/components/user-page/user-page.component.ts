@@ -13,6 +13,10 @@ import { Platform } from "@angular/cdk/platform";
 import { Router } from "@angular/router";
 
 
+interface GroupedExpense {
+  [category: string]: { amount: number };
+}
+
 
 @Component({
   selector: "app-user-page",
@@ -36,7 +40,8 @@ export class UserPageComponent implements OnInit, AfterViewInit {
     is_activated: false,
     is_superuser: false,
   };
-  protected expenseChart: any;
+  protected monthlyExpensesChart: any;
+  protected detailedExpenseChart: any;
   protected token: string | null = null;
   @Input()
   protected monthAndYear: Date = new Date();
@@ -45,6 +50,7 @@ export class UserPageComponent implements OnInit, AfterViewInit {
   selectedFile: File | null = null;
   maxSizeInMB = 2;
   displayInput:boolean = false;
+  displayUpdateInput: boolean = false;
   selectedMonthStr!: string;
   selectedYear:number = new Date().getFullYear();
   today: Date = new Date();
@@ -52,7 +58,7 @@ export class UserPageComponent implements OnInit, AfterViewInit {
   protected readonly ONE: string = 'one';
   protected readonly ALL: string = 'all';
   todaysExpense: Expense = {
-    date: new Date().toISOString().split('T')[0], // Set today's date
+    date: new Date().toISOString().split('T')[0],
     category: '',
     amount: 0,
     description: ''
@@ -62,6 +68,10 @@ export class UserPageComponent implements OnInit, AfterViewInit {
     total: string,
   }[] = [];
   currentMonthExpenses: Expense[] = [];
+  
+  isEditModalOpen = false;
+  editExpense: Expense = this.todaysExpense; 
+
   popularCurrencies = [
     { code: 'KRW', name: 'South Korean Won', symbol: '₩' },
     { code: 'UZS', name: 'Uzbek Som', symbol: 'soʻm' },
@@ -121,7 +131,6 @@ export class UserPageComponent implements OnInit, AfterViewInit {
     } catch (err) {
       console.error(err);
     }
-    // this.createChart();
   }
 
   onAmountChange(event: Event): void {
@@ -132,10 +141,10 @@ export class UserPageComponent implements OnInit, AfterViewInit {
 
   onCurrencyChange(currencyCode: string){
     localStorage.setItem('currency', currencyCode);
-    if(this.expenseChart && this.expenseChart.data && this.expenseChart.data.datasets){
-      const dataset = this.expenseChart.data.datasets[0];
+    if(this.monthlyExpensesChart && this.monthlyExpensesChart.data && this.monthlyExpensesChart.data.datasets){
+      const dataset = this.monthlyExpensesChart.data.datasets[0];
       dataset.label = `Total monthly expenses for ${this.selectedYear} in ${this.selectedCurrency}`; 
-      this.expenseChart.update();
+      this.monthlyExpensesChart.update();
     }
   }
 
@@ -147,12 +156,12 @@ export class UserPageComponent implements OnInit, AfterViewInit {
   }
 
 
-  createChart() {
-    if (this.expenseChart) {
-      this.expenseChart.destroy();
+  createMonthlyExpensesChart() {
+    if (this.monthlyExpensesChart) {
+      this.monthlyExpensesChart.destroy();
     }
-    const ctx = document.getElementById('expenseChart') as HTMLCanvasElement;
-    this.expenseChart = new Chart(ctx, {
+    const ctx = document.getElementById('monthlyExpensesChart') as HTMLCanvasElement;
+    this.monthlyExpensesChart = new Chart(ctx, {
       type: 'bar',
       data: {
         labels: this.monthlyExpenses.map(expense => expense.month),
@@ -174,6 +183,64 @@ export class UserPageComponent implements OnInit, AfterViewInit {
         }
       }
     });
+  }
+
+  createDetailedExpenseChart() {
+    const ctx = document.getElementById('detailedExpenseChart') as HTMLCanvasElement;
+    const groupedExpenses = this.currentMonthExpenses.reduce<GroupedExpense>((acc, category) => {
+      if (!acc[category.category]) {
+        acc[category.category] = { amount: 0 };
+      }
+      acc[category.category].amount += category.amount;
+      return acc;
+    }, {});
+    
+    // Step 2: Extract labels and data
+    const labels = Object.keys(groupedExpenses);
+    const data = Object.values(groupedExpenses).map(expense => expense.amount);
+    const backgroundColors = labels.map(() => this.getRandomColor());
+    
+    // Now you can use labels and data to create your chart
+    const totalAmount = data.reduce((acc, amount) => acc + amount, 0);
+
+    if (this.detailedExpenseChart) {
+      this.detailedExpenseChart.destroy();
+    }
+
+    this.detailedExpenseChart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: labels,
+        datasets: [{
+          data: data,
+          backgroundColor: backgroundColors,
+          hoverOffset: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: (context) => {
+                const value = context.raw as number; // Cast to number
+                const percentage = ((value / totalAmount) * 100).toFixed(2);
+                return `${context.label}: ${value} (${percentage}%)`;
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+
+  private getRandomColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
   }
 
   public emitDateChange(event: MatDatepickerInputEvent<Date | null, unknown>): void {
@@ -199,10 +266,11 @@ export class UserPageComponent implements OnInit, AfterViewInit {
         next: (data: any) => {
           if(all === 'all'){
             this.monthlyExpenses = data.expenses;
-            this.createChart();
+            this.createMonthlyExpensesChart();
           }else{
             this.currentMonthExpenses = data.expenses;
             this.calculateMonthlyTotal();
+            this.createDetailedExpenseChart();
           }
         },
         error: (err: HttpErrorResponse) => {
@@ -217,23 +285,95 @@ export class UserPageComponent implements OnInit, AfterViewInit {
       console.error(err);
     }
   }
-  showAddNewExpense(){
-    this.displayInput = !this.displayInput;
+  showAddNewExpense(action: string){
+    if(action === 'update'){
+      this.displayUpdateInput = true;
+      this.displayInput = true;
+    }else{
+      this.displayUpdateInput = false;
+      this.displayInput = !this.displayInput;
+    }
   }
 
   addExpense(): void {
     this.secureService.saveExpense(this.todaysExpense).subscribe({
       next: (response: any) => {
         // Handle success
-        console.log("Expense saved successfully");
         console.log(response);
-        this.currentMonthExpenses.push(this.todaysExpense);
-        this.monthlyTotal += this.todaysExpense.amount;
+        let currentMonth = new Date().getMonth();
+        let selectedMonth = new Date(this.todaysExpense.date).getMonth(); 
+        console.log(currentMonth+ " , ", selectedMonth, ", ", currentMonth === selectedMonth);
+        if(currentMonth == selectedMonth){
+          this.currentMonthExpenses.push(this.todaysExpense);
+          this.monthlyTotal += this.todaysExpense.amount;
+        }
+        this.cleanEditor();
+        if(currentMonth == selectedMonth && this.detailedExpenseChart){
+          console.log("updating the detailedExpenseChart..");
+          this.createDetailedExpenseChart();
+        }
+        this.viewExpenses(this.ALL);
       },
       error: (error: any) => {
         console.error("Error saving expense data:", error);
       },
     });
+  }
+   // Open the edit modal
+   openEditModal(expense: Expense) {
+    this.todaysExpense = expense;
+    this.todaysExpense.date = new Date(expense.date).toISOString().split('T')[0];
+    this.showAddNewExpense('update');
+  }
+
+  cleanEditor(){
+    this.todaysExpense = {
+      amount: 0,
+      category: '',
+      date: new Date().toISOString().split('T')[0], 
+    };
+  }
+  // Close the modal
+  closeEditModal(evt: any) {
+    evt.preventDefault();
+    this.showAddNewExpense('close');
+    this.cleanEditor(); 
+  }
+
+  // Update the expense
+  updateExpense(expense: Expense, evt: any) {
+    evt.preventDefault();
+    console.log("updaing ...", expense);
+    this.secureService.updatedExpense(expense).subscribe({
+      next: (data) => {
+        console.log(data);
+        this.cleanEditor();
+        this.viewExpenses(this.ONE);
+        this.viewExpenses(this.ALL);
+      },
+      error: (error: any) => {
+        console.error("Error updating expense data:", error);
+      },
+     });
+  }
+
+  // Delete the expense
+  deleteExpense(expenseId: string | undefined, evt: any) {
+    evt.preventDefault();
+    console.log('deleting...', expenseId);
+    if(expenseId){
+      this.secureService.deleteExpense(expenseId).subscribe({
+        next: (data)=> {
+          console.log(data);
+          this.cleanEditor();
+          this.viewExpenses(this.ONE);
+          this.viewExpenses(this.ALL);
+        },
+        error: (error: any) => {
+          console.error("Error deleting expense data:", error);
+        },
+      });
+    }
   }
 
   convertImage(img: any) {

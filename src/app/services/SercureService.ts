@@ -2,15 +2,14 @@ import { Injectable } from "@angular/core";
 import { AuthService } from "./AuthService";
 import { environment } from "src/environments/environment";
 import { Expense } from "../models/expense";
-import { HttpParams } from "@angular/common/http";
+import {HttpParams } from "@angular/common/http";
 
 @Injectable({
   providedIn: "root",
 })
-export class SecureService extends AuthService {
+export class SecureService extends AuthService{
 
   private url = environment.baseUrl + "/api";
-
   getVisits(weeks: number | null) {
     return this.http.get(this.url + `/visits/data/${weeks}`, {
       headers: this.getHeaders(),
@@ -33,6 +32,18 @@ export class SecureService extends AuthService {
     return this.http.get(this.url + `/expenses`, {
       headers: this.getHeaders(),
       params: params,
+    });
+  }
+
+  deleteExpense(id: string){
+    return this.http.delete(this.url + `/expenses/${id}`, {
+      headers: this.getHeaders(),
+    });
+  }
+  updatedExpense(expense: Expense){
+    return this.http.put(this.url + `/expenses/${expense._id}`, {
+      headers: this.getHeaders(),
+      expense
     });
   }
 }

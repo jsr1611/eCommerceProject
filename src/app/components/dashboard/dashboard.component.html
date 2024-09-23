@@ -24,9 +24,10 @@
     </div>
   </div>
 
+  <div *ngIf="token != null && token.length > 1 && haveAdminRight">
   <h2>User Management</h2>
   <div class="dashboard-container">
-    <div class="table-responsive" *ngIf="token != null && token.length > 1">
+    <div class="table-responsive" >
       <table class="table table-hover table-bordered text-center">
         <thead class="thead-dark">
           <tr>
@@ -77,4 +78,5 @@
       </table>
     </div>
   </div>
+</div>
 </div>

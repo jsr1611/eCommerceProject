@@ -19,6 +19,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   visitsOverTime2: { [key: string]: number } = {};
   visitsOverTimeColor: { [key: string]: string } = {};
   deviceInfo: { [key: string]: number } = {};
+  haveAdminRight: boolean = false;
 
   protected users!: User[];
   protected token: string | null = null;
@@ -33,8 +34,20 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.fetchVisitData();
   }
 
-  changeStatus(_t46: number, arg1: string|undefined, arg2: boolean|undefined) {
-    alert('Not implemented yet');
+  changeStatus(index: number, userId: string|undefined, userStatus: boolean|undefined) {
+    this.authService.changeUserStatus(userId, !userStatus).subscribe({
+      next: (data: any) => {
+        console.log(data);
+        this.users[index].is_activated = !userStatus;
+      },
+      error: (err: HttpErrorResponse) => {
+        console.log('Error fetching user profile', (err.error ? err.error.message : err.message));
+        if (err.status === 401) {
+          localStorage.removeItem('token');
+          this.router.navigate(['/login']);
+        }
+      }
+    })    
   }
 
   convertImage(img: any) {
@@ -48,16 +61,26 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.token = this.authService.getToken();
     try {
-      this.authService.getUserProfile('all').subscribe({
-        next: (data: any) => {
-          this.users = data.users;
+      this.authService.getUserProfile('one').subscribe({
+        next: (data) =>{
+          this.haveAdminRight = data?.user.is_superuser ?? false;
+          if(this.haveAdminRight){
+            this.authService.getUserProfile('all').subscribe({
+              next: (data: any) => {
+                this.users = data.users;
+              },
+              error: (err: HttpErrorResponse) => {
+                console.log('Error fetching user profile', (err.error ? err.error.message : err.message));
+                if (err.status === 401) {
+                  localStorage.removeItem('token');
+                  this.router.navigate(['/login']);
+                }
+              }
+            });
+          }
         },
         error: (err: HttpErrorResponse) => {
           console.log('Error fetching user profile', (err.error ? err.error.message : err.message));
-          if (err.status === 401) {
-            localStorage.removeItem('token');
-            this.router.navigate(['/login']);
-          }
         }
       });
     } catch (err) {

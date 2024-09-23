@@ -9,6 +9,7 @@ import { jwtDecode } from "jwt-decode";
   providedIn: "root",
 })
 export class AuthService {
+  
   private baseUrl = environment.baseUrl + "/api/auth";
 
   constructor(protected http: HttpClient) {}
@@ -32,9 +33,13 @@ export class AuthService {
     return this.http.post(`${this.baseUrl}/signup`, { user });
   }
 
-  getUserProfile(all: string): Observable<User> {
+  changeUserStatus(userId: string|undefined, newStatus: boolean|undefined) {
+   return this.http.post(`${this.baseUrl}/update-status`, {userId, newStatus}); 
+  }
+
+  getUserProfile(all: string): Observable<any> {
     const params = new HttpParams().set('all', (all === 'all').toString());
-    return this.http.get<User>(`${this.baseUrl}/profile`, {
+    return this.http.get<any>(`${this.baseUrl}/profile`, {
       headers: this.getHeaders(),
       params: params,
     });

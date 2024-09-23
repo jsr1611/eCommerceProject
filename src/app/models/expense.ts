@@ -1,5 +1,5 @@
 export interface Expense{
-  id?: string; // Unique identifier for each expense (e.g., UUID or MongoDB ObjectId)
+  _id?: string; // Unique identifier for each expense (e.g., UUID or MongoDB ObjectId)
   userId?: string,
   date: string; // Date in ISO format (yyyy-MM-dd)
   category: string; // Category of the expense (e.g., "Food", "Transport", etc.)

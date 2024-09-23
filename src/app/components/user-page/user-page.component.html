@@ -56,7 +56,7 @@
       </mat-datepicker>
     </mat-form-field>  
 
-    <div class="btn-align-horizontal">
+    <div>
       <mat-form-field appearance="fill">
         <mat-select placeholder="Select Currency" [(value)]="selectedCurrency" (selectionChange)="onCurrencyChange($event.value)">
           <mat-option *ngFor="let currency of popularCurrencies" [value]="currency.code">
@@ -64,7 +64,7 @@
           </mat-option>
         </mat-select>
       </mat-form-field>      
-      <button type="button" class="btn-view" (click)="showAddNewExpense()">
+      <button type="button" class="btn-view" (click)="showAddNewExpense('create')">
         Add New
       </button>
       <button type="button" class="btn-view" (click)="viewExpenses(ONE)">
@@ -123,7 +123,13 @@
         ></textarea>
       </div>
 
-      <button type="submit" class="btn-submit">Add Expense</button>
+      <button *ngIf="!displayUpdateInput" type="submit" class="btn-submit">Add Expense</button>
+      <div *ngIf="displayUpdateInput" class="btn-align-horizontal">
+        <button class="btn-view" (click)="updateExpense(todaysExpense, $event)">Update</button>
+        <button class="btn-view" (click)="deleteExpense(todaysExpense._id, $event)">Delete</button>
+        <button class="btn-view" (click)="closeEditModal($event)">Close</button>
+      </div>
+      
     </form>
   </div>
 
@@ -139,6 +145,7 @@
           <th>Category</th>
           <th>Amount</th>
           <th>Description</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
@@ -147,6 +154,7 @@
           <td>{{ expense.category }}</td>
           <td>{{ (expense.amount | currency : selectedCurrency : 'symbol' : '1.0-0') }}</td>
           <td>{{ expense.description }}</td>
+          <td><button class="btn btn-primary" (click)="openEditModal(expense)">Edit</button></td>
         </tr>
       </tbody>
     </table>
@@ -162,5 +170,8 @@
 </div>
 
 <div class="chart-container">
-  <canvas id="expenseChart"></canvas>
+  <canvas id="detailedExpenseChart"></canvas>
+</div>
+<div class="chart-container">
+  <canvas id="monthlyExpensesChart"></canvas>
 </div>
