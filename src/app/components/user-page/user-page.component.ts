@@ -269,6 +269,7 @@ export class UserPageComponent implements OnInit, AfterViewInit {
             this.createMonthlyExpensesChart();
           }else{
             this.currentMonthExpenses = data.expenses;
+            this.currentMonthExpenses.sort((a,b) => new Date(a.date) < new Date(b.date) ? 1 : (new Date(a.date) == new Date(b.date) ? 0 : -1 ));
             this.calculateMonthlyTotal();
             this.createDetailedExpenseChart();
           }
@@ -306,6 +307,7 @@ export class UserPageComponent implements OnInit, AfterViewInit {
         if(currentMonth == selectedMonth){
           this.currentMonthExpenses.push(this.todaysExpense);
           this.monthlyTotal += this.todaysExpense.amount;
+          this.currentMonthExpenses.sort((a,b) => new Date(a.date) < new Date(b.date) ? 1 : (new Date(a.date) == new Date(b.date) ? 0 : -1));
         }
         this.cleanEditor();
         if(currentMonth == selectedMonth && this.detailedExpenseChart){
