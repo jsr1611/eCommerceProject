@@ -20,19 +20,24 @@ export class SignupComponent {
   }
  
   errorMessage: string = '';
+  successMessage: string = '';
 
   constructor(private authService: AuthService, @Inject(Router) private router: Router) {}
 
   signup(): void {
-    console.log("user : ", this.user);
-    
     if (this.user.username === '') return;
     this.authService.signup(this.user).subscribe({
       next: (data) => {
         console.log(data);
-        this.router.navigate(['/login']);
+        this.successMessage = data.message;
+        this.errorMessage = "";
+        setTimeout(()=>{
+          this.successMessage = '';
+          this.router.navigate(['/login']);
+        }, 2000);
       },
       error: (err: HttpErrorResponse) => {
+        console.error(err);
         this.errorMessage = `${err.error ? err.error.message : err.message}`;
       },
     });
