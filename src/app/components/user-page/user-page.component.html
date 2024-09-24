@@ -124,7 +124,7 @@
       </div>
 
       <button *ngIf="!displayUpdateInput" type="submit" class="btn-submit">Add Expense</button>
-      <div *ngIf="displayUpdateInput" class="btn-align-horizontal">
+      <div *ngIf="displayUpdateInput" class="btn-align-horizontal d-flex justify-content-center">
         <button class="btn btn-primary" (click)="updateExpense(todaysExpense, $event)">Update</button>
         <button class="btn btn-danger" (click)="deleteExpense(todaysExpense._id, $event)">Delete</button>
         <button class="btn btn-primary" (click)="closeEditModal($event)">Close</button>

@@ -1,13 +1,3 @@
-/* Base styles for mobile (small screens) */
-.container,
-.container-lg,
-.container-md,
-.container-sm {
-  max-width: 95%;
-  padding: 10px;
-}
-
-/* Profile Container */
 .profile-container {
   max-width: 100%;
   margin: 0;
@@ -16,7 +6,6 @@
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
-
 .profile-content {
   display: flex;
   align-items: center;
@@ -24,34 +13,24 @@
   flex-wrap: wrap;
   width: 100%;
 }
-
 .profile-picture {
   flex: 0 0 150px;
   justify-content: center;
   margin-bottom: 15px;
   width: 200px;
 }
-
 .profile-details {
   text-align: start;
   width: 100%;
 }
-
-h2 {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
 .profile-picture img {
   width: 100%;
   border-radius: 50%;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-
 .upload-controls {
   margin-top: 15px;
 }
-
 .upload-button {
   display: block;
   width: 100%;
@@ -65,37 +44,30 @@ h2 {
   text-align: center;
   text-decoration: none;
 }
-
 .upload-button:hover {
   background-color: #0056b3;
 }
-
 .profile-details p {
   margin: 10px 0;
   font-size: 16px;
 }
-
 .profile-picture-label {
   display: block;
   cursor: pointer;
 }
-
 .profile-picture-container {
   position: relative;
   display: inline-block;
 }
-
 .profile-picture-container img {
   display: block;
   width: 100%;
   height: auto;
   transition: opacity 0.3s ease;
 }
-
 .profile-picture-container:hover img {
   opacity: 0.5;
 }
-
 .overlay-text {
   position: absolute;
   top: 50%;
@@ -111,13 +83,10 @@ h2 {
   visibility: hidden;
   opacity: 0;
 }
-
 .profile-picture-container:hover .overlay-text {
   visibility: visible;
   opacity: 1;
 }
-
-/* Monthly Expense Management */
 .expense-container {
   max-width: 100%;
   padding: 15px;
@@ -125,60 +94,46 @@ h2 {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
 }
-
 h2 {
   text-align: center;
   margin-bottom: 20px;
   color: #333;
 }
-
 .expense-controls-section {
   display: flex;
   justify-content: center;
   margin: 16px 0;
 }
-
 .expense-controls-buttons {
   display: flex;
   flex-direction: column;
   width: 100%;
 }
-
 .flex-item {
   flex: 1;
   margin: 10px 0;
   padding: 10px 0;
 }
-
 .mat-form-field {
   width: 100%;
   padding: 0;
   margin: 0;
 }
-
 .btn.btn-primary.flex-item {
   height: 56px;
 }
-
-.mat-option-text {
-  font-size: 14px;
-}
-
 .expense-form {
   margin-bottom: 20px;
 }
-
 .form-group {
   margin-bottom: 15px;
 }
-
 .form-group label {
   display: block;
   margin-bottom: 5px;
   font-weight: bold;
   color: #555;
 }
-
 .form-group input,
 .form-group textarea {
   width: 100%;
@@ -187,7 +142,6 @@ h2 {
   border-radius: 5px;
   box-sizing: border-box;
 }
-
 .btn-submit {
   width: 100%;
   padding: 10px;
@@ -199,17 +153,12 @@ h2 {
   font-size: 16px;
   margin-top: 10px;
 }
-
 .btn-submit:hover {
   background-color: #218838;
 }
-
-/* Hide Table on Mobile */
 .expense-table {
   display: none;
 }
-
-/* Show Cards on Mobile */
 .expense-cards {
   display: flex;
   flex-wrap: wrap;
@@ -217,7 +166,6 @@ h2 {
   margin-top: 20px;
   width: 100%;
 }
-
 .expense-card {
   display: block;
   background: #fff;
@@ -228,14 +176,12 @@ h2 {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   width: 100%;
 }
-
 .expense-card:hover {
   transform: scale(1.05);
   background-color: #f0f8ff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border: 1px solid #28a745;
 }
-
 .expense-card-header {
   display: flex;
   justify-content: space-between;
@@ -243,17 +189,14 @@ h2 {
   font-weight: bold;
   color: #333;
 }
-
 .expense-card-body p {
   margin: 5px 0;
   color: #555;
 }
-
 .expense-card-actions {
   text-align: right;
   margin-top: 10px;
 }
-
 .modal {
   position: fixed;
   top: 0;
@@ -266,91 +209,72 @@ h2 {
   align-items: center;
   z-index: 1000;
 }
-
 .modal-content {
   background-color: #fff;
   padding: 20px;
   border-radius: 10px;
   width: 100%;
 }
-
-/* Close Button */
 .close {
   color: #aaa;
   float: right;
   font-size: 28px;
   font-weight: bold;
 }
-
 .close:hover,
 .close:focus {
   color: black;
   text-decoration: none;
   cursor: pointer;
 }
-
-/* Larger screens */
 @media (min-width: 992px) {
   .profile-container {
     margin: 50px auto;
   }
-
   .profile-content {
     flex-wrap: nowrap;
   }
-
   .profile-picture {
     flex: 0 0 200px;
     margin-bottom: 20px;
   }
-
   .profile-details {
     flex: 1;
     margin-left: 30px;
     text-align: left;
   }
-
   .expense-controls-buttons {
     flex-direction: row;
   }
-
   .flex-item {
     margin: 0 8px;
     padding: 0;
   }
-
-  /* Show Table on Larger Screens */
   .expense-table {
     display: block;
     margin-top: 20px;
   }
-
   .expense-table h3 {
     margin-bottom: 10px;
     color: #333;
   }
-
   .expense-table table {
     width: 100%;
     border-collapse: collapse;
   }
-
   .expense-table th,
   .expense-table td {
     padding: 10px;
     text-align: left;
     border-bottom: 1px solid #ddd;
   }
-
   .expense-table th {
     background-color: #007bff;
     color: #fff;
   }
-
   .expense-cards {
     display: none;
   }
-
   .modal-content {
     max-width: 600px;
   }
