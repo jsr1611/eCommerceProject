@@ -321,13 +321,19 @@ export class UserPageComponent implements OnInit, AfterViewInit {
       },
     });
   }
-   // Open the edit modal
-   openEditModal(expense: Expense) {
-    this.todaysExpense = expense;
+  openEditModal(expense: Expense) {
+    document.addEventListener('keydown', this.handleEscapePress.bind(this));
+    this.todaysExpense = {
+      _id: expense._id,
+      date: expense.date,
+      category: expense.category,
+      amount: expense.amount,
+      description: expense.description,
+      userId: expense.userId
+    };
     this.todaysExpense.date = new Date(expense.date).toISOString().split('T')[0];
     this.showAddNewExpense('update');
   }
-
   cleanEditor(){
     this.todaysExpense = {
       amount: 0,
@@ -338,8 +344,22 @@ export class UserPageComponent implements OnInit, AfterViewInit {
   // Close the modal
   closeEditModal(evt: any) {
     evt.preventDefault();
+    document.removeEventListener('keydown', this.handleEscapePress.bind(this));
     this.showAddNewExpense('close');
     this.cleanEditor(); 
+  }
+
+  handleEscapePress(event: KeyboardEvent): void {
+    if (event.key === 'Escape') {
+      this.closeEditModal(event);
+    }
+  }
+
+  onBackgroundClick(event: MouseEvent): void {
+    const modalContent = document.querySelector('.modal-content') as HTMLElement;
+    if (modalContent && !modalContent.contains(event.target as Node)) {
+      this.closeEditModal(event);
+    }
   }
 
   // Update the expense

@@ -73,8 +73,10 @@
     </div>
 </div>
 
-  <!-- Expense Form -->
-  <div class="expense-form" *ngIf="displayInput">
+<!-- Expense Form Modal -->
+<div class="modal" *ngIf="displayInput" (click)="onBackgroundClick($event)">
+  <div class="modal-content">
+    <span class="close" (click)="closeEditModal($event)">&times;</span>
     <form (submit)="addExpense()">
       <div class="form-group">
         <label for="date">Date:</label>
@@ -125,13 +127,14 @@
 
       <button *ngIf="!displayUpdateInput" type="submit" class="btn-submit">Add Expense</button>
       <div *ngIf="displayUpdateInput" class="btn-align-horizontal">
-        <button class="btn-view" (click)="updateExpense(todaysExpense, $event)">Update</button>
-        <button class="btn-view" (click)="deleteExpense(todaysExpense._id, $event)">Delete</button>
-        <button class="btn-view" (click)="closeEditModal($event)">Close</button>
+        <button class="btn btn-primary" (click)="updateExpense(todaysExpense, $event)">Update</button>
+        <button class="btn btn-danger" (click)="deleteExpense(todaysExpense._id, $event)">Delete</button>
+        <button class="btn btn-primary" (click)="closeEditModal($event)">Close</button>
       </div>
-      
     </form>
   </div>
+</div>
+
 
   <!-- Expenses Table -->
   <div class="expense-table">
@@ -159,6 +162,23 @@
       </tbody>
     </table>
   </div>
+
+  <div class="expense-cards">
+    <div class="expense-card" *ngFor="let expense of currentMonthExpenses">
+      <div class="expense-card-header">
+        <span class="expense-date">{{ expense.date | date }}</span>
+        <span class="expense-amount">{{ expense.amount | currency: selectedCurrency: 'symbol': '1.0-0' }}</span>
+      </div>
+      <div class="expense-card-body">
+        <p><strong>Category:</strong> {{ expense.category }}</p>
+        <p><strong>Description:</strong> {{ expense.description }}</p>
+      </div>
+      <div class="expense-card-actions">
+        <button class="btn btn-primary" (click)="openEditModal(expense)">Edit</button>
+      </div>
+    </div>
+  </div>
+  
 
   <!-- Monthly Summary -->
   <div class="expense-summary">

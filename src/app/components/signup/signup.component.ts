@@ -18,12 +18,7 @@ export class SignupComponent {
     firstname: '',
     lastname: '',
   }
-  
-  // firstname:string = '';
-  // lastname:string = '';
-  // username: string = '';
-  // email: string = '';
-  // password: string = '';
+ 
   errorMessage: string = '';
 
   constructor(private authService: AuthService, @Inject(Router) private router: Router) {}
