@@ -315,7 +315,7 @@ input.edit-input {
 }
 
 /* Adjustments for Small Screens */
-@media (max-width: 800px) {
+@media (max-width: 992px) {
   .profile-content {
     flex-direction: column;
     align-items: center;
