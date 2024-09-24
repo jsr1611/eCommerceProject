@@ -126,47 +126,33 @@ h2 {
   color: #333;
 }
 
-.month-selector {
+.expense-controls-section{
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
+  justify-content: center;
+  margin: 16px 0;
+}
+.expense-controls-buttons{
+  display: flex;
+  width: 100%;
+}
+.flex-item {
+  flex: 1; 
+  margin: 0 8px;
 }
 
-.month-selector label,
-.month-selector input[type="month"],
-.month-selector .btn-view {
-  flex: 1 1 100%;
-  margin-bottom: 10px;
+.mat-form-field {
+  width: 100%;
+  min-width: 200px;
+  padding: 0 0;
 }
-
-.month-selector label {
-  font-weight: bold;
-  color: #555;
-}
-
-.month-selector input[type="month"] {
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-}
-
-.btn-view {
-  padding: 8px 16px;
-  margin: 0 5px;
+.btn.btn-primary.flex-item{
   height: 56px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: background-color 0.3s;
 }
 
-.btn-view:hover {
-  background-color: #0056b3;
+.mat-option-text {
+  font-size: 14px;
 }
+
 
 .expense-form {
   margin-bottom: 20px;
@@ -271,51 +257,24 @@ canvas {
   max-width: 100%;
 }
 
-.month-picker .mat-calendar-period-button {
-  pointer-events: none;
-}
 
-.date-selector {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-}
-
-.mat-form-field {
-  flex: 1; /* Makes the form field flexible */
-  min-width: 200px; /* Minimum width for the form field */
-  height: 56px; /* Fixed height for consistency */
-  margin-right: 8px; /* Space between form field and button */
-}
-
-.mat-select {
-  min-width: 150px;
-}
-
-.mat-option-text {
-  font-size: 14px;
-}
 
 label {
-  display: block; /* Each label on a new line */
-  margin-bottom: 8px; /* Space between labels */
+  display: block; 
+  margin-bottom: 8px; 
 }
 
 input.edit-input {
-  width: 100%; /* Full width for inputs */
-  padding: 8px; /* Padding inside inputs */
-  margin-bottom: 16px; /* Space below inputs */
-  border: 1px solid #ccc; /* Border for inputs */
-  border-radius: 4px; /* Rounded corners */
+  width: 100%; 
+  padding: 8px; 
+  margin-bottom: 16px; 
+  border: 1px solid #ccc; 
+  border-radius: 4px; 
 }
 .btn-align-horizontal {
   display: flex;
   justify-content: center;
   width: 100%;
-}
-
-.btn-align-horizontal.btn-view {
-  min-width: 100px;
 }
 
 /* The Modal (background) */
@@ -336,7 +295,7 @@ input.edit-input {
   background-color: #fff;
   padding: 20px;
   border-radius: 10px;
-  /* max-width: 500px; */
+  max-width: 600px;
   width: 100%;
 }
 
@@ -356,7 +315,7 @@ input.edit-input {
 }
 
 /* Adjustments for Small Screens */
-@media (max-width: 600px) {
+@media (max-width: 800px) {
   .profile-content {
     flex-direction: column;
     align-items: center;
@@ -376,18 +335,29 @@ input.edit-input {
     padding: 15px;
   }
 
-  .month-selector {
+  .expense-controls-buttons {
     flex-direction: column;
   }
-
-  .btn-view {
-    width: 100%;
-    margin: 5px 0;
+  .flex-item{
+    margin: 10px 0;
+    padding: 10px 0;
   }
+
+  .mat-mdc-form-field.flex-item {
+    padding: 0 0 0 0;
+    margin: 0 0;
+  }
+
 
   /* Hide Table on Mobile */
   .expense-table {
     display: none;
+  }
+  .modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 100%;
   }
 
   /* Show Cards on Mobile */
@@ -432,17 +402,7 @@ input.edit-input {
     text-align: right;
     margin-top: 10px;
   }
-}
 
-/* Custom styles */
-@media (min-width: 992px) {
-  .container, .container-lg, .container-md, .container-sm {
-      max-width: 95%;
-  }
-}
-
-/* Adjustments for Medium Screens */
-@media (min-width: 601px) and (max-width: 800px) {
   .profile-container,
   .expense-container {
     max-width: 100%;
@@ -456,9 +416,11 @@ input.edit-input {
   .profile-details {
     margin-left: 15px;
   }
+}
 
-  .expense-table th,
-  .expense-table td {
-    padding: 8px;
+/* Custom styles */
+@media (max-width: 992px) {
+  .container, .container-lg, .container-md, .container-sm {
+      max-width: 95%;
   }
 }

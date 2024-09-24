@@ -287,6 +287,7 @@ export class UserPageComponent implements OnInit, AfterViewInit {
     }
   }
   showAddNewExpense(action: string){
+    document.addEventListener('keydown', this.handleEscapePress.bind(this));
     if(action === 'update'){
       this.displayUpdateInput = true;
       this.displayInput = true;
@@ -322,7 +323,6 @@ export class UserPageComponent implements OnInit, AfterViewInit {
     });
   }
   openEditModal(expense: Expense) {
-    document.addEventListener('keydown', this.handleEscapePress.bind(this));
     this.todaysExpense = {
       _id: expense._id,
       date: expense.date,

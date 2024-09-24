@@ -39,39 +39,38 @@
 <div class="expense-container">
   <h2>Monthly Expense Management</h2>
 
-  <!-- Month Selector -->
-  <div class="date-selector">    
-    
-    <mat-form-field appearance="fill">
-      <input matInput [(ngModel)]="monthAndYear"
-                      [matDatepicker]="picker"
-                      [max]="today"
-                      (dateChange)="emitDateChange($event)" />
-      <mat-datepicker-toggle
-        matSuffix
-        [for]="picker">
-      </mat-datepicker-toggle>
-      <mat-datepicker #picker [startView]="'year'"
-                      (monthSelected)="monthChanged($event, picker)">
-      </mat-datepicker>
-    </mat-form-field>  
 
-    <div>
-      <mat-form-field appearance="fill">
+  <div class="expense-controls-section">    
+    <div class="expense-controls-buttons">
+      <mat-form-field appearance="fill" class="flex-item month-selector-item">
+        <input matInput [(ngModel)]="monthAndYear"
+                        [matDatepicker]="picker"
+                        [max]="today"
+                        (dateChange)="emitDateChange($event)" />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="picker">
+        </mat-datepicker-toggle>
+        <mat-datepicker #picker [startView]="'year'"
+                        (monthSelected)="monthChanged($event, picker)">
+        </mat-datepicker>
+      </mat-form-field>  
+
+      <mat-form-field appearance="fill" class="flex-item">
         <mat-select placeholder="Select Currency" [(value)]="selectedCurrency" (selectionChange)="onCurrencyChange($event.value)">
           <mat-option *ngFor="let currency of popularCurrencies" [value]="currency.code">
             {{ currency.name }} ({{ currency.symbol }})
           </mat-option>
         </mat-select>
       </mat-form-field>      
-      <button type="button" class="btn-view" (click)="showAddNewExpense('create')">
+      <button type="button" class="btn btn-primary flex-item" (click)="showAddNewExpense('create')">
         Add New
       </button>
-      <button type="button" class="btn-view" (click)="viewExpenses(ONE)">
+      <button type="button" class="btn btn-primary flex-item" (click)="viewExpenses(ONE)">
         View Expenses
       </button>
     </div>
-</div>
+  </div>
 
 <!-- Expense Form Modal -->
 <div class="modal" *ngIf="displayInput" (click)="onBackgroundClick($event)">
