@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/AuthService';
@@ -18,10 +19,10 @@ export class LoginComponent {
     this.authService.login(this.username, this.password).subscribe({
       next: (response) => {
         this.authService.setToken(response.token);
-        this.router.navigate(['/profile']); // Navigate to your secured area
+        this.router.navigate(['/profile']);
       },
-      error: (err) => {
-        this.errorMessage = 'Invalid credentials';
+      error: (err: HttpErrorResponse) => {
+        this.errorMessage = `${err.error ? err.error.message : err.message}`;
       },
     });
   }
