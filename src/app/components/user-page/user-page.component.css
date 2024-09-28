@@ -279,3 +279,8 @@ h2 {
     max-width: 600px;
   }
 }
+
+
+.edit-user-btn{
+  cursor: pointer;
+}

@@ -37,6 +37,10 @@ export class AuthService {
    return this.http.post(`${this.baseUrl}/update-status`, {userId, newStatus}); 
   }
 
+  updateUserInfo(_id: string | undefined, user: User){
+    return this.http.put(`${this.baseUrl}/users/${_id}`, {"userInfo": user});
+  }
+
   getUserProfile(all: string): Observable<any> {
     const params = new HttpParams().set('all', (all === 'all').toString());
     return this.http.get<any>(`${this.baseUrl}/profile`, {

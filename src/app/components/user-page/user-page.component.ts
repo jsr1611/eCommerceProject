@@ -31,6 +31,10 @@ interface GroupedExpense {
   ],
 })
 export class UserPageComponent implements OnInit, AfterViewInit {
+  private USER_CONST = {
+    EXPENSE: "expense",
+    USER: "user",
+  }
   protected user: User = {
     username: "",
     email: "",
@@ -40,6 +44,7 @@ export class UserPageComponent implements OnInit, AfterViewInit {
     is_activated: false,
     is_superuser: false,
   };
+  protected userInfo!: User; 
   protected monthlyExpensesChart: any;
   protected detailedExpenseChart: any;
   protected token: string | null = null;
@@ -51,6 +56,9 @@ export class UserPageComponent implements OnInit, AfterViewInit {
   maxSizeInMB = 2;
   displayInput:boolean = false;
   displayUpdateInput: boolean = false;
+  displayUserModal: boolean = false;
+  successMessage: string | null = null;
+  errorMessage: string | null = null;
   selectedMonthStr!: string;
   selectedYear:number = new Date().getFullYear();
   today: Date = new Date();
@@ -297,6 +305,18 @@ export class UserPageComponent implements OnInit, AfterViewInit {
     }
   }
 
+  openUserModal() {
+    this.userInfo = {
+      _id: "",
+      username: "",
+      password: "",
+      firstname: this.user.firstname,
+      lastname: this.user.lastname,
+      email: this.user.email
+    };
+    this.displayUserModal = !this.displayUserModal;
+  }
+
   addExpense(): void {
     this.secureService.saveExpense(this.todaysExpense).subscribe({
       next: (response: any) => {
@@ -310,7 +330,7 @@ export class UserPageComponent implements OnInit, AfterViewInit {
           this.monthlyTotal += this.todaysExpense.amount;
           this.currentMonthExpenses.sort((a,b) => new Date(a.date) < new Date(b.date) ? 1 : (new Date(a.date) == new Date(b.date) ? 0 : -1));
         }
-        this.closeEditModal(event);
+        this.closeEditModal(event, "expense");
         if(currentMonth == selectedMonth && this.detailedExpenseChart){
           console.log("updating the detailedExpenseChart..");
           this.createDetailedExpenseChart();
@@ -342,24 +362,48 @@ export class UserPageComponent implements OnInit, AfterViewInit {
     };
   }
   // Close the modal
-  closeEditModal(evt: any) {
+  closeEditModal(evt: any, modalName: string) {
     evt.preventDefault();
     document.removeEventListener('keydown', this.handleEscapePress.bind(this));
-    this.cleanEditor(); 
-    this.showAddNewExpense('close');
+    if(modalName === this.USER_CONST.EXPENSE){
+      this.cleanEditor(); 
+      this.showAddNewExpense('close');
+    }else if(modalName === this.USER_CONST.USER){
+      this.openUserModal();
+      this.successMessage = null;
+      this.errorMessage = null;
+    }
   }
 
   handleEscapePress(event: KeyboardEvent): void {
     if (event.key === 'Escape') {
-      this.closeEditModal(event);
+      this.closeEditModal(event, this.USER_CONST.EXPENSE);
     }
   }
 
-  onBackgroundClick(event: MouseEvent): void {
+  onBackgroundClick(event: MouseEvent, modalName: string): void {
     const modalContent = document.querySelector('.modal-content') as HTMLElement;
     if (modalContent && !modalContent.contains(event.target as Node)) {
-      this.closeEditModal(event);
+      this.closeEditModal(event, modalName);
     }
+  }
+
+  // Update user info
+  updateUserInfo(evt: any) {
+    evt.preventDefault();
+    this.authService.updateUserInfo(this.user._id, this.userInfo).subscribe({
+      next: (data: any) =>{
+        console.log(data);
+        this.successMessage = data.message;
+        setTimeout(()=>{
+          this.closeEditModal(evt, this.USER_CONST.USER);
+        }, 2000);
+      },
+      error: (err: HttpErrorResponse) => {
+        console.error(err);
+        this.errorMessage = `${err.error ? err.error.message : err.message}`;
+      },
+    })
   }
 
   // Update the expense
@@ -368,7 +412,7 @@ export class UserPageComponent implements OnInit, AfterViewInit {
     this.secureService.updatedExpense(expense).subscribe({
       next: (data) => {
         console.log(data);
-        this.closeEditModal(event);
+        this.closeEditModal(event, this.USER_CONST.EXPENSE);
         this.viewExpenses(this.ONE);
         this.viewExpenses(this.ALL);
       },
@@ -385,7 +429,7 @@ export class UserPageComponent implements OnInit, AfterViewInit {
       this.secureService.deleteExpense(expenseId).subscribe({
         next: (data)=> {
           console.log(data);
-          this.closeEditModal(event);
+          this.closeEditModal(event, this.USER_CONST.EXPENSE);
           this.viewExpenses(this.ONE);
           this.viewExpenses(this.ALL);
         },
