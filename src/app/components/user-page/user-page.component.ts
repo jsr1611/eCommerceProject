@@ -310,7 +310,7 @@ export class UserPageComponent implements OnInit, AfterViewInit {
           this.monthlyTotal += this.todaysExpense.amount;
           this.currentMonthExpenses.sort((a,b) => new Date(a.date) < new Date(b.date) ? 1 : (new Date(a.date) == new Date(b.date) ? 0 : -1));
         }
-        this.cleanEditor();
+        this.closeEditModal(event);
         if(currentMonth == selectedMonth && this.detailedExpenseChart){
           console.log("updating the detailedExpenseChart..");
           this.createDetailedExpenseChart();
@@ -345,8 +345,8 @@ export class UserPageComponent implements OnInit, AfterViewInit {
   closeEditModal(evt: any) {
     evt.preventDefault();
     document.removeEventListener('keydown', this.handleEscapePress.bind(this));
-    this.showAddNewExpense('close');
     this.cleanEditor(); 
+    this.showAddNewExpense('close');
   }
 
   handleEscapePress(event: KeyboardEvent): void {
@@ -365,11 +365,10 @@ export class UserPageComponent implements OnInit, AfterViewInit {
   // Update the expense
   updateExpense(expense: Expense, evt: any) {
     evt.preventDefault();
-    console.log("updaing ...", expense);
     this.secureService.updatedExpense(expense).subscribe({
       next: (data) => {
         console.log(data);
-        this.cleanEditor();
+        this.closeEditModal(event);
         this.viewExpenses(this.ONE);
         this.viewExpenses(this.ALL);
       },
@@ -382,12 +381,11 @@ export class UserPageComponent implements OnInit, AfterViewInit {
   // Delete the expense
   deleteExpense(expenseId: string | undefined, evt: any) {
     evt.preventDefault();
-    console.log('deleting...', expenseId);
     if(expenseId){
       this.secureService.deleteExpense(expenseId).subscribe({
         next: (data)=> {
           console.log(data);
-          this.cleanEditor();
+          this.closeEditModal(event);
           this.viewExpenses(this.ONE);
           this.viewExpenses(this.ALL);
         },
