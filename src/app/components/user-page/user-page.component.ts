@@ -120,6 +120,11 @@ export class UserPageComponent implements OnInit, AfterViewInit {
     }
     this.selectedMonthStr = this.datePipe.transform(new Date(this.monthAndYear), "MMMM yyyy")!;    
     this.token = this.authService.getToken();
+    this.getUser();
+  }
+
+
+  getUser(){
     try {
       this.authService.getUserProfile(this.ONE).subscribe({
         next: (data: any) => {
@@ -395,9 +400,10 @@ export class UserPageComponent implements OnInit, AfterViewInit {
       next: (data: any) =>{
         console.log(data);
         this.successMessage = data.message;
+        this.getUser();
         setTimeout(()=>{
           this.closeEditModal(evt, this.USER_CONST.USER);
-        }, 2000);
+        }, 1000);
       },
       error: (err: HttpErrorResponse) => {
         console.error(err);
