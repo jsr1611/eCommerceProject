@@ -37,8 +37,9 @@
             <th scope="col">Username</th>
             <th scope="col">Email</th>
             <th>Role</th>
-            <th scope="col">Active</th>
+            <th scope="col">Status</th>
             <th scope="col">Signup date</th>
+            <th scope="col">Last login</th>
           </tr>
         </thead>
         <tbody>
@@ -68,11 +69,13 @@
               <button
                 class="btn btn-primary"
                 (click)="changeStatus(i, userObj._id, userObj.is_activated)"
+                [title]="userObj.is_activated ? 'Deactivate?'  : 'Activate?'"
               >
                 {{ userObj.is_activated ? "Active" : "Inactive" }}
               </button>
             </td>
             <td>{{ displayDate(userObj.created_at) | date }}</td>
+            <td>{{ (displayDate(userObj.last_session) | date) ?? "--" }}</td>
           </tr>
         </tbody>
       </table>

@@ -11,5 +11,6 @@ export interface User {
     is_superuser?: boolean;
     profilePicture?: string;
     created_at?: string;
+    last_session?: string;
   }  
 
