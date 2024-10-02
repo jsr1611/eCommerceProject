@@ -329,6 +329,7 @@ export class UserPageComponent implements OnInit, AfterViewInit {
         console.log(response);
         let currentMonth = new Date().getMonth();
         let selectedMonth = new Date(this.todaysExpense.date).getMonth(); 
+        this.todaysExpense = response.data; 
         console.log(currentMonth+ " , ", selectedMonth, ", ", currentMonth === selectedMonth);
         if(currentMonth == selectedMonth){
           this.currentMonthExpenses.push(this.todaysExpense);
@@ -337,7 +338,6 @@ export class UserPageComponent implements OnInit, AfterViewInit {
         }
         this.closeEditModal(event, "expense");
         if(currentMonth == selectedMonth && this.detailedExpenseChart){
-          console.log("updating the detailedExpenseChart..");
           this.createDetailedExpenseChart();
         }
         this.viewExpenses(this.ALL);
